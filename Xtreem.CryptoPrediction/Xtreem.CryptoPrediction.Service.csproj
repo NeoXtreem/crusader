@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>Xtreem.CryptoPrediction.Service</RootNamespace>
+    <AssemblyName>Xtreem.CryptoPrediction.Service</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="Binance.Net" Version="4.0.17" />
+    <PackageReference Include="Microsoft.ML" Version="1.2.0" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="1.2.0" />
+  </ItemGroup>
+
+</Project>
