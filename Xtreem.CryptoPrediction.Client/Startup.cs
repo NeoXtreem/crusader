@@ -4,8 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Xtreem.CryptoPrediction.Service.Services;
-using Xtreem.CryptoPrediction.Service.Services.Interfaces;
+using Xtreem.CryptoPrediction.Client.Repositories;
+using Xtreem.CryptoPrediction.Client.Services;
+using Xtreem.CryptoPrediction.Client.Services.Interfaces;
+using Xtreem.CryptoPrediction.Client.Settings;
+using Xtreem.CryptoPrediction.Data.Contexts;
+using Xtreem.CryptoPrediction.Data.Contexts.Interfaces;
+using Xtreem.CryptoPrediction.Data.Repositories.Interfaces;
+using Xtreem.CryptoPrediction.Data.Settings;
 
 namespace Xtreem.CryptoPrediction.Client
 {
@@ -18,11 +24,19 @@ namespace Xtreem.CryptoPrediction.Client
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ICryptoCompareService, CryptoCompareService>();
             services.AddScoped<IBinanceService, BinanceService>();
             services.AddScoped<IPredictionService, PredictionService>();
+
+            services.AddScoped<IMarketDataContext, MarketDataContext>();
+            services.AddScoped<IMarketDataRepository, MarketDataRepository>();
+
             services.AddTransient<IKlineMappingService, KlineMappingService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.Configure<DataSettings>(Configuration.GetSection("Data"));
+            services.Configure<CryptoCompareSettings>(Configuration.GetSection("CryptoCompare"));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
