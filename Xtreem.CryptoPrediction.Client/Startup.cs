@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xtreem.CryptoPrediction.Client.Repositories;
+using Xtreem.CryptoPrediction.Client.Repositories.Interfaces;
 using Xtreem.CryptoPrediction.Client.Services;
 using Xtreem.CryptoPrediction.Client.Services.Interfaces;
 using Xtreem.CryptoPrediction.Client.Settings;
@@ -24,12 +25,13 @@ namespace Xtreem.CryptoPrediction.Client
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IHistoricalDataService, HistoricalDataService>();
             services.AddScoped<ICryptoCompareService, CryptoCompareService>();
             services.AddScoped<IBinanceService, BinanceService>();
             services.AddScoped<IPredictionService, PredictionService>();
 
             services.AddScoped<IMarketDataContext, MarketDataContext>();
-            services.AddScoped<IMarketDataRepository, MarketDataRepository>();
+            services.AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>();
 
             services.AddTransient<IKlineMappingService, KlineMappingService>();
 

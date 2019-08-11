@@ -75,7 +75,11 @@ export class TVChartContainer extends React.PureComponent {
 			this.tvWidget.remove();
 			this.tvWidget = null;
 		}
-	}
+  }
+
+  reload() {
+      //this.tvWidget.reload();
+  }
 
 	render() {
 		return (

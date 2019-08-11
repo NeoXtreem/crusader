@@ -11,6 +11,7 @@ export class Home extends Component {
     this.predict = this.predict.bind(this);
     this.updateBase = this.updateBase.bind(this);
     this.updateQuote = this.updateQuote.bind(this);
+    this.tvChart = React.createRef();
   }
 
   handleErrors(response) {
@@ -45,6 +46,7 @@ export class Home extends Component {
         })
         .then(this.handleErrors)
         .then(response => response.json())
+        .then(this.tvChart.current.reload())
         .catch(error => console.log(error));
     }
     else {
@@ -73,7 +75,7 @@ export class Home extends Component {
           <span style={{ paddingLeft: 10, paddingRight: 10 }}><strong>Quote:</strong></span><input type="text" placeholder="USD" value={this.state.quote} onChange={this.updateQuote} />
         </p>
         <p><button className="btn btn-primary" onClick={this.predict}>{predict}</button></p>
-        <TVChartContainer />
+        <TVChartContainer ref={this.tvChart} />
       </div>
     );
   }

@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xtreem.CryptoPrediction.Cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xtreem.CryptoPrediction.Api", "Xtreem.CryptoPrediction.Api\Xtreem.CryptoPrediction.Api.csproj", "{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xtreem.CryptoPrediction.Common", "Xtreem.CryptoPrediction.Common\Xtreem.CryptoPrediction.Common.csproj", "{EA5C6790-EA5B-43C8-99EF-F30027B2D8BF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA5C6790-EA5B-43C8-99EF-F30027B2D8BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA5C6790-EA5B-43C8-99EF-F30027B2D8BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA5C6790-EA5B-43C8-99EF-F30027B2D8BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA5C6790-EA5B-43C8-99EF-F30027B2D8BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

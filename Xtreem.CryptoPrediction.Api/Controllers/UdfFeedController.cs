@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 using Xtreem.CryptoPrediction.Api.Models;
 using Xtreem.CryptoPrediction.Api.Repositories.Interfaces;
-using Xtreem.CryptoPrediction.Common.Helpers;
 using Xtreem.CryptoPrediction.Data.Types;
 using Type = Xtreem.CryptoPrediction.Api.Types.Type;
 
@@ -14,11 +16,13 @@ namespace Xtreem.CryptoPrediction.Api.Controllers
     [ApiController]
     public class UdfFeedController : ControllerBase
     {
-        private readonly IMarketDataRepository _marketDataRepository;
+        private readonly ILogger<UdfFeedController> _logger;
+        private readonly IMarketDataReadViewRepository _marketDataReadViewRepository;
 
-        public UdfFeedController(IMarketDataRepository marketDataRepository)
+        public UdfFeedController(ILogger<UdfFeedController> logger, IMarketDataReadViewRepository marketDataReadViewRepository)
         {
-            _marketDataRepository = marketDataRepository;
+            _logger = logger;
+            _marketDataReadViewRepository = marketDataReadViewRepository;
         }
 
         [HttpGet]
@@ -66,10 +70,13 @@ namespace Xtreem.CryptoPrediction.Api.Controllers
         [Route("history")]
         public async Task<ActionResult<StatusResponse>> History(string symbol, long from, long to, string resolution)
         {
-            var ohlcvs = (await _marketDataRepository.GetOhlcvsAsync(symbol, "USD", EnumEx.GetValueFromDescription<Resolution>(resolution), from, to)).ToArray();
+            _logger.LogInformation($"Requesting history for {symbol} from {DateTimeOffset.FromUnixTimeSeconds(from)} to {DateTimeOffset.FromUnixTimeSeconds(to)} at {resolution} resolution.");
+
+            var ohlcvs = (await _marketDataReadViewRepository.GetOhlcvsAsync(symbol, "USD", Resolution.Parse(resolution), from, to)).OrderBy(o => o.Time).ToArray();
 
             if (ohlcvs.Any())
             {
+                _logger.LogInformation($"Found {ohlcvs.Length} records from {DateTimeOffset.FromUnixTimeSeconds(ohlcvs.First().Time)} to {DateTimeOffset.FromUnixTimeSeconds(ohlcvs.Last().Time)}");
                 return new HistoryResponse
                 {
                     T = ohlcvs.Select(o => o.Time).ToArray(),
@@ -81,10 +88,41 @@ namespace Xtreem.CryptoPrediction.Api.Controllers
                 };
             }
 
-            return new NoDataResponse
-            {
-                NextTime = await _marketDataRepository.GetNextTimeAsync(symbol, "USD", EnumEx.GetValueFromDescription<Resolution>(resolution), from)
-            };
+            var nextTime = await _marketDataReadViewRepository.GetNextTimeAsync(symbol, "USD", Resolution.Parse(resolution), from);
+            _logger.LogInformation("No data available." + (nextTime != default ? $" Next time with data is {DateTimeOffset.FromUnixTimeSeconds(nextTime)}" : String.Empty));
+            return new NoDataResponse { NextTime = nextTime };
+        }
+
+        // GET api/values
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> Get()
+        {
+            return new[] { "value1", "value2" };
+        }
+
+        // GET api/values/5
+        [HttpGet("{id}")]
+        public ActionResult<string> Get(int id)
+        {
+            return "value";
+        }
+
+        // POST api/values
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
+
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
         }
     }
 }

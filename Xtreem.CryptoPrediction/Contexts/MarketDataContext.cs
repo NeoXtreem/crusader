@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using Xtreem.CryptoPrediction.Data.Contexts.Interfaces;
 using Xtreem.CryptoPrediction.Data.Models;
@@ -12,14 +10,6 @@ namespace Xtreem.CryptoPrediction.Data.Contexts
     {
         private readonly DataSettings _settings;
         private readonly IMongoDatabase _mongoDb;
-
-        static MarketDataContext()
-        {
-            ConventionRegistry.Register("EnumStringConvention", new ConventionPack
-            {
-                new EnumRepresentationConvention(BsonType.String)
-            }, t => true);
-        }
 
         public MarketDataContext(IOptions<DataSettings> options)
         {

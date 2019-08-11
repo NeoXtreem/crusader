@@ -10,7 +10,7 @@ namespace Xtreem.CryptoPrediction.Data.Models
 
         public string Quote { get; set; }
 
-        public Resolution Resolution { get; set; }
+        public string Resolution { get; set; }
 
         public long Time { get; set; }
 

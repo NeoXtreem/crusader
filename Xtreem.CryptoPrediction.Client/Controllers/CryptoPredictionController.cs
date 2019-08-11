@@ -11,18 +11,18 @@ namespace Xtreem.CryptoPrediction.Client.Controllers
     public class CryptoPredictionController : Controller
     {
         private readonly ILogger<CryptoPredictionController> _logger;
-        private readonly ICryptoCompareService _cryptoCompareService;
+        private readonly IHistoricalDataService _historicalDataService;
         private readonly IBinanceService _binanceService;
         private readonly IPredictionService _predictionService;
 
         public CryptoPredictionController(
             ILogger<CryptoPredictionController> logger,
-            ICryptoCompareService cryptoCompareService,
+            IHistoricalDataService historicalDataService,
             IBinanceService binanceService,
             IPredictionService predictionService)
         {
             _logger = logger;
-            _cryptoCompareService = cryptoCompareService;
+            _historicalDataService = historicalDataService;
             _binanceService = binanceService;
             _predictionService = predictionService;
         }
@@ -31,11 +31,10 @@ namespace Xtreem.CryptoPrediction.Client.Controllers
         [Route("[action]/{baseCurrency}/{quoteCurrency}")]
         public async Task<ActionResult<object>> Predict(string baseCurrency, string quoteCurrency/*, DateTime to*/)
         {
-            var result = await _cryptoCompareService.GetHistoricalData(baseCurrency, quoteCurrency, DateTime.UtcNow, Resolution.Minute);
+            await _historicalDataService.GetHistoricalData(baseCurrency, quoteCurrency, Resolution.Minute, DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1000)), DateTime.UtcNow);
 
             return Ok();
         }
-
 
         //[HttpGet("[action]/{symbol}/{pageIndex}/{pageSize}")]
         //[Route("predict/{symbol}")]
@@ -56,6 +55,5 @@ namespace Xtreem.CryptoPrediction.Client.Controllers
         //    //    LabYaks = _labYakModelMappingService.Map(await _labYakPagerService.LoadPageAsync(day, pageIndex, pageSize))
         //    //});
         //}
-
     }
 }

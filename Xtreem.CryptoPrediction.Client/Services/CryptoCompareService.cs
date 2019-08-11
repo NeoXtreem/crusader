@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
+using Xtreem.CryptoPrediction.Client.Repositories.Interfaces;
 using Xtreem.CryptoPrediction.Client.Services.Interfaces;
 using Xtreem.CryptoPrediction.Client.Settings;
 using Xtreem.CryptoPrediction.Data.Models;
-using Xtreem.CryptoPrediction.Data.Repositories.Interfaces;
 using Xtreem.CryptoPrediction.Data.Types;
 
 namespace Xtreem.CryptoPrediction.Client.Services
@@ -16,54 +18,53 @@ namespace Xtreem.CryptoPrediction.Client.Services
     public class CryptoCompareService : ICryptoCompareService
     {
         private readonly CryptoCompareSettings _settings;
-        private readonly IMarketDataRepository _marketDataRepository;
+        private readonly IMarketDataReadWriteRepository _marketDataReadWriteRepository;
 
-        public CryptoCompareService(IOptions<CryptoCompareSettings> options, IMarketDataRepository marketDataRepository)
+        public CryptoCompareService(IOptions<CryptoCompareSettings> options, IMarketDataReadWriteRepository marketDataReadWriteRepository)
         {
             _settings = options.Value;
-            _marketDataRepository = marketDataRepository;
+            _marketDataReadWriteRepository = marketDataReadWriteRepository;
         }
 
-        public async Task<object> GetHistoricalData(string baseCurrency, string quoteCurrency, DateTimeOffset to, Resolution resolution)
+        public async Task<IEnumerable<Ohlcv>> LoadHistoricalData(string baseCurrency, string quoteCurrency, DateTime from, DateTime to, Resolution resolution)
         {
-            using (var client = new HttpClient {BaseAddress = new Uri(_settings.BaseUrl)})
+            const int maxLimit = 2000;
+            var ohlcvs = new List<Ohlcv>();
+
+            for (var batchTo = to; batchTo > from; batchTo = batchTo.Subtract(maxLimit * resolution.Interval))
             {
-                var response = await client.GetAsync(QueryHelpers.AddQueryString($"histo{resolution.ToString().ToLowerInvariant()}",
-                    new (string key, string value)[]
-                    {
-                        ("fsym", baseCurrency),
-                        ("tsym", quoteCurrency),
-                        ("toTs", to.ToUniversalTime().ToUnixTimeSeconds().ToString()),
-                        ("api_key", _settings.ApiKey)
-                    }.ToDictionary(p => p.key, p => p.value.ToString())));
-
-                if (response.IsSuccessStatusCode)
+                using (var client = new HttpClient {BaseAddress = new Uri(_settings.BaseUrl)})
                 {
-                    var content = JObject.Parse(await response.Content.ReadAsStringAsync());
+                    var limit = (batchTo - from > maxLimit * resolution.Interval ? maxLimit : resolution.IntervalsInPeriod(batchTo - from)) - 1;
+                    if (limit < 0) continue;
 
-                    var data = content.SelectTokens("$.Data[*]");
-
-                    await _marketDataRepository.AddOhlcvsAsync(data.Select(t =>
+                    using (var response = await client.GetAsync(QueryHelpers.AddQueryString($"histo{resolution.ToString().ToLowerInvariant()}",
+                        new (string key, string value)[]
+                        {
+                            ("fsym", baseCurrency),
+                            ("tsym", quoteCurrency),
+                            ("toTs", ((DateTimeOffset)batchTo).ToUniversalTime().ToUnixTimeSeconds().ToString()),
+                            ("api_key", _settings.ApiKey),
+                            ("limit", limit.ToString())
+                        }.ToDictionary(p => p.key, p => p.value.ToString()))))
                     {
-                        var ohlcv = t.ToObject<Ohlcv>();
-                        ohlcv.Base = baseCurrency;
-                        ohlcv.Quote = quoteCurrency;
-                        ohlcv.Resolution = resolution;
-                        return ohlcv;
-                    }), resolution);
-
-
-
-
-
-                    return null;
-                    //return Ok(_rssItemMappingService.Map(JsonConvert.DeserializeObject<IEnumerable<object>>(await response.Content.ReadAsStringAsync())));
+                        if (response.IsSuccessStatusCode)
+                        {
+                            ohlcvs.AddRange(JObject.Parse(await response.Content.ReadAsStringAsync()).SelectTokens("$.Data[*]").Select(t =>
+                            {
+                                var ohlcv = t.ToObject<Ohlcv>();
+                                ohlcv.Base = baseCurrency;
+                                ohlcv.Quote = quoteCurrency;
+                                ohlcv.Resolution = resolution.ToString();
+                                return ohlcv;
+                            }));
+                        }
+                    }
                 }
-
-                return null;
-
             }
 
+            await _marketDataReadWriteRepository.AddOhlcvsAsync(ohlcvs, resolution);
+            return ohlcvs;
         }
     }
 }

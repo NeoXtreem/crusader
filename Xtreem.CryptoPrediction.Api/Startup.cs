@@ -24,7 +24,7 @@ namespace Xtreem.CryptoPrediction.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IMarketDataContext, MarketDataContext>();
-            services.AddScoped<IMarketDataRepository, MarketDataRepository>();
+            services.AddScoped<IMarketDataReadViewRepository, MarketDataReadViewRepository>();
 
             services.AddCors(options =>
             {
