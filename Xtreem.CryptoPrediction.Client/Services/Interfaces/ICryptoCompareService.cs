@@ -8,6 +8,6 @@ namespace Xtreem.CryptoPrediction.Client.Services.Interfaces
 {
     public interface ICryptoCompareService
     {
-        Task<IEnumerable<Ohlcv>> LoadHistoricalData(string baseCurrency, string quoteCurrency, DateTime from, DateTime to, Resolution resolution);
+        Task<IEnumerable<Ohlcv>> LoadHistoricalData(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to);
     }
 }

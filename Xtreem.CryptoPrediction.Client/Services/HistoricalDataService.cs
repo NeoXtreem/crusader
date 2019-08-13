@@ -26,10 +26,10 @@ namespace Xtreem.CryptoPrediction.Client.Services
 
             async Task LoadHistoricalDataForGap(DateTime gapFrom, DateTime gapTo)
             {
-                newOhlcvs.AddRange(await _cryptoCompareService.LoadHistoricalData(baseCurrency, quoteCurrency, gapFrom, gapTo, resolution));
+                newOhlcvs.AddRange(await _cryptoCompareService.LoadHistoricalData(baseCurrency, quoteCurrency, resolution, gapFrom, gapTo));
             }
 
-            var ohlcvs = (await _marketDataReadWriteRepository.GetOhlcvsAsync(baseCurrency, quoteCurrency, resolution, from, to)).ToArray();
+            var ohlcvs = _marketDataReadWriteRepository.GetOhlcvs(baseCurrency, quoteCurrency, resolution, from, to).ToArray();
             var currentFrom = from;
 
             // Find all gaps in the stored OHLCV data and fill these by loading them from CryptoCompare.

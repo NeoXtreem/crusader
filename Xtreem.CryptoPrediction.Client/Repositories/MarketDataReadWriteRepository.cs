@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xtreem.CryptoPrediction.Client.Repositories.Interfaces;
 using Xtreem.CryptoPrediction.Data.Contexts.Interfaces;
@@ -17,11 +16,7 @@ namespace Xtreem.CryptoPrediction.Client.Repositories
 
         public async Task AddOhlcvsAsync(IEnumerable<Ohlcv> items, Resolution resolution)
         {
-            var enumerable = items as Ohlcv[] ?? items.ToArray();
-            if (enumerable.Any())
-            {
-                await _context.HistoricalOhlcvCollection.InsertManyAsync(enumerable);
-            }
+            await (await _context.GetHistoricalOhlcvBulkExecutorAsync()).BulkImportAsync(items, disableAutomaticIdGeneration: false);
         }
     }
 }

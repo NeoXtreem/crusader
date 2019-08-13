@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MongoDB.Driver;
+﻿using System.Linq;
 using Xtreem.CryptoPrediction.Api.Repositories.Interfaces;
 using Xtreem.CryptoPrediction.Data.Contexts.Interfaces;
 using Xtreem.CryptoPrediction.Data.Repositories;
@@ -15,20 +12,9 @@ namespace Xtreem.CryptoPrediction.Api.Repositories
 
         public MarketDataReadViewRepository(IMarketDataContext context) : base(context) => _context = context;
 
-        public async Task<long> GetNextTimeAsync(string baseCurrency, string quoteCurrency, Resolution resolution, long from)
+        public long GetNextTime(string baseCurrency, string quoteCurrency, Resolution resolution, long from)
         {
-            using (var cursor = await _context.HistoricalOhlcvCollection.FindAsync(o => o.Base == baseCurrency && o.Quote == quoteCurrency && o.Resolution == resolution.ToString() && o.Time < from))
-            {
-                while (await cursor.MoveNextAsync())
-                {
-                    if (cursor.Current.Any())
-                    {
-                        return cursor.Current.Max(o => o.Time);
-                    }
-                }
-            }
-
-            return default;
+            return _context.GetHistoricalOhlcvsQuery().Where(o => o.Base == baseCurrency && o.Quote == quoteCurrency && o.Resolution == resolution.ToString() && o.Time < from).Max(o => o.Time);
         }
     }
 }

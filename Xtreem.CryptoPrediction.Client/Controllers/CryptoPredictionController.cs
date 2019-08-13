@@ -31,7 +31,8 @@ namespace Xtreem.CryptoPrediction.Client.Controllers
         [Route("[action]/{baseCurrency}/{quoteCurrency}")]
         public async Task<ActionResult<object>> Predict(string baseCurrency, string quoteCurrency/*, DateTime to*/)
         {
-            await _historicalDataService.GetHistoricalData(baseCurrency, quoteCurrency, Resolution.Minute, DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1000)), DateTime.UtcNow);
+            var ohlcvs = await _historicalDataService.GetHistoricalData(baseCurrency, quoteCurrency, Resolution.Minute, DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1000)), DateTime.UtcNow);
+            //_predictionService.Predict();
 
             return Ok();
         }

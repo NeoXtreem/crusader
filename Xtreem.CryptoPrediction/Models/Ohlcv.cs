@@ -1,9 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using Xtreem.CryptoPrediction.Data.Types;
-
-namespace Xtreem.CryptoPrediction.Data.Models
+﻿namespace Xtreem.CryptoPrediction.Data.Models
 {
-    [BsonIgnoreExtraElements]
     public class Ohlcv
     {
         public string Base { get; set; }

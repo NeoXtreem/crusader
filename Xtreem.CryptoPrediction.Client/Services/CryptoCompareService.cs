@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -26,15 +25,17 @@ namespace Xtreem.CryptoPrediction.Client.Services
             _marketDataReadWriteRepository = marketDataReadWriteRepository;
         }
 
-        public async Task<IEnumerable<Ohlcv>> LoadHistoricalData(string baseCurrency, string quoteCurrency, DateTime from, DateTime to, Resolution resolution)
+        public async Task<IEnumerable<Ohlcv>> LoadHistoricalData(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to)
         {
             const int maxLimit = 2000;
             var ohlcvs = new List<Ohlcv>();
 
+            // Handle the requested period in batches based on the limitation of the provider API.
             for (var batchTo = to; batchTo > from; batchTo = batchTo.Subtract(maxLimit * resolution.Interval))
             {
                 using (var client = new HttpClient {BaseAddress = new Uri(_settings.BaseUrl)})
                 {
+                    // Calculate the limit to pass based on the size of the current batch.
                     var limit = (batchTo - from > maxLimit * resolution.Interval ? maxLimit : resolution.IntervalsInPeriod(batchTo - from)) - 1;
                     if (limit < 0) continue;
 

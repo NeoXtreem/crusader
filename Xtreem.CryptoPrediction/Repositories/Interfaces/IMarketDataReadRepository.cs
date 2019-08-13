@@ -8,8 +8,8 @@ namespace Xtreem.CryptoPrediction.Data.Repositories.Interfaces
 {
     public interface IMarketDataReadRepository
     {
-        Task<IEnumerable<Ohlcv>> GetOhlcvsAsync(string baseCurrency, string quoteCurrency, Resolution resolution, long from, long to);
+        IEnumerable<Ohlcv> GetOhlcvs(string baseCurrency, string quoteCurrency, Resolution resolution, long from, long to);
 
-        Task<IEnumerable<Ohlcv>> GetOhlcvsAsync(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to);
+        IEnumerable<Ohlcv> GetOhlcvs(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to);
     }
 }

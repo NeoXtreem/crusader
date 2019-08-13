@@ -2,10 +2,12 @@
 {
     public class DataSettings
     {
-        public string ConnectionString { get; set; }
+        public string Endpoint { get; set; }
 
-        public string MarketDataDatabase { get; set; }
+        public string PrimaryKey { get; set; }
 
-        public string HistoricalOhlcvCollection { get; set; }
+        public string MarketDataDb { get; set; }
+
+        public string HistoricalOhlcvContainer { get; set; }
     }
 }

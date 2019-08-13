@@ -68,11 +68,11 @@ namespace Xtreem.CryptoPrediction.Api.Controllers
 
         [HttpGet]
         [Route("history")]
-        public async Task<ActionResult<StatusResponse>> History(string symbol, long from, long to, string resolution)
+        public ActionResult<StatusResponse> History(string symbol, long from, long to, string resolution)
         {
             _logger.LogInformation($"Requesting history for {symbol} from {DateTimeOffset.FromUnixTimeSeconds(from)} to {DateTimeOffset.FromUnixTimeSeconds(to)} at {resolution} resolution.");
 
-            var ohlcvs = (await _marketDataReadViewRepository.GetOhlcvsAsync(symbol, "USD", Resolution.Parse(resolution), from, to)).OrderBy(o => o.Time).ToArray();
+            var ohlcvs = _marketDataReadViewRepository.GetOhlcvs(symbol, "USD", Resolution.Parse(resolution), from, to).OrderBy(o => o.Time).ToArray();
 
             if (ohlcvs.Any())
             {
@@ -88,7 +88,7 @@ namespace Xtreem.CryptoPrediction.Api.Controllers
                 };
             }
 
-            var nextTime = await _marketDataReadViewRepository.GetNextTimeAsync(symbol, "USD", Resolution.Parse(resolution), from);
+            var nextTime = _marketDataReadViewRepository.GetNextTime(symbol, "USD", Resolution.Parse(resolution), from);
             _logger.LogInformation("No data available." + (nextTime != default ? $" Next time with data is {DateTimeOffset.FromUnixTimeSeconds(nextTime)}" : String.Empty));
             return new NoDataResponse { NextTime = nextTime };
         }

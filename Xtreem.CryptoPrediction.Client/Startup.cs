@@ -11,7 +11,6 @@ using Xtreem.CryptoPrediction.Client.Services.Interfaces;
 using Xtreem.CryptoPrediction.Client.Settings;
 using Xtreem.CryptoPrediction.Data.Contexts;
 using Xtreem.CryptoPrediction.Data.Contexts.Interfaces;
-using Xtreem.CryptoPrediction.Data.Repositories.Interfaces;
 using Xtreem.CryptoPrediction.Data.Settings;
 
 namespace Xtreem.CryptoPrediction.Client
