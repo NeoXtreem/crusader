@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xtreem.Crusader.Data", "Xtreem.Crusader.Data\Xtreem.Crusader.Data.csproj", "{E9B44DE1-0740-4D58-B7F2-A607B3E9B01A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xtreem.Crusader.Client", "Xtreem.Crusader.Client\Xtreem.Crusader.Client.csproj", "{B25AF6C6-33E0-48F0-A664-32516B60B0B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xtreem.Crusader.Api", "Xtreem.Crusader.Api\Xtreem.Crusader.Api.csproj", "{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E9B44DE1-0740-4D58-B7F2-A607B3E9B01A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9B44DE1-0740-4D58-B7F2-A607B3E9B01A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9B44DE1-0740-4D58-B7F2-A607B3E9B01A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9B44DE1-0740-4D58-B7F2-A607B3E9B01A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B25AF6C6-33E0-48F0-A664-32516B60B0B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B25AF6C6-33E0-48F0-A664-32516B60B0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B25AF6C6-33E0-48F0-A664-32516B60B0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B25AF6C6-33E0-48F0-A664-32516B60B0B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB0EED2-AA9B-4014-8CA2-CF8B5228D664}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C3E4F546-6A44-4EF9-A435-AE4D1000B721}
+	EndGlobalSection
+EndGlobal
