@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Xtreem.Crusader.Api.Types
+namespace Xtreem.Crusader.Client.Types
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum Type

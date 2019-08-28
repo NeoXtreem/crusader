@@ -13,7 +13,7 @@ export class TVChartContainer extends React.PureComponent {
     symbol: 'BTC',
     interval: 'M',
     containerId: 'tv_chart_container',
-    datafeedUrl: process.env.REACT_APP_CRYPTOPREDICTIONAPI_URL,
+    datafeedUrl: 'api/udffeed',
     libraryPath: '/charting_library/',
     chartsStorageUrl: 'https://saveload.tradingview.com',
     chartsStorageApiVersion: '1.1',
@@ -30,7 +30,7 @@ export class TVChartContainer extends React.PureComponent {
   componentDidMount() {
     const widgetOptions = {
       symbol: this.props.symbol,
-      // BEWARE: no trailing slash is expected in feed URL
+      // BEWARE: No trailing slash is expected in feed URL.
       datafeed: new window.Datafeeds.UDFCompatibleDatafeed(this.props.datafeedUrl),
       interval: this.props.interval,
       container_id: this.props.containerId,

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.ML;
-using Xtreem.Crusader.Api.Models.ML;
+using Xtreem.Crusader.Api.Models;
 
 namespace Xtreem.Crusader.Api.Services.Interfaces
 {

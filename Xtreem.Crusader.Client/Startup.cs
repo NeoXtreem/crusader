@@ -31,6 +31,7 @@ namespace Xtreem.Crusader.Client
             services.AddScoped<ICryptoCompareService, CryptoCompareService>();
             services.AddScoped<IMarketDataContext, MarketDataContext>();
             services.AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>();
+            services.AddScoped<IMarketDataReadViewRepository, MarketDataReadViewRepository>();
 
             services.Configure<DataSettings>(Configuration.GetSection("Data"));
             services.Configure<CrusaderApiSettings>(Configuration.GetSection("CrusaderApi"));

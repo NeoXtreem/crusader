@@ -2,7 +2,7 @@
 using Microsoft.ML.Data;
 using Xtreem.Crusader.Api.Attributes;
 
-namespace Xtreem.Crusader.Api.Models.ML
+namespace Xtreem.Crusader.Api.Models
 {
     public class OhlcvInput
     {

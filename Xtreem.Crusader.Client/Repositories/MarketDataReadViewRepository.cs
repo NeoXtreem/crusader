@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using Xtreem.Crusader.Api.Repositories.Interfaces;
+using Xtreem.Crusader.Client.Repositories.Interfaces;
 using Xtreem.Crusader.Data.Contexts.Interfaces;
 using Xtreem.Crusader.Data.Repositories;
 using Xtreem.Crusader.Data.Types;
 
-namespace Xtreem.Crusader.Api.Repositories
+namespace Xtreem.Crusader.Client.Repositories
 {
     internal class MarketDataReadViewRepository : MarketDataReadRepository, IMarketDataReadViewRepository
     {

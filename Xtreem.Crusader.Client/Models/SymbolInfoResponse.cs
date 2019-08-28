@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
-using Xtreem.Crusader.Api.Types;
+using Xtreem.Crusader.Client.Types;
 
-namespace Xtreem.Crusader.Api.Models.Udf
+namespace Xtreem.Crusader.Client.Models
 {
     public class SymbolInfoResponse
     {

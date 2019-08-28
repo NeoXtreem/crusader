@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ML;
-using Xtreem.Crusader.Api.Models.ML;
-using Xtreem.Crusader.Api.Repositories;
-using Xtreem.Crusader.Api.Repositories.Interfaces;
+using Xtreem.Crusader.Api.Models;
 using Xtreem.Crusader.Api.Services;
 using Xtreem.Crusader.Api.Services.Interfaces;
 using Xtreem.Crusader.Api.Settings;
@@ -37,7 +35,6 @@ namespace Xtreem.Crusader.Api
             services.AddScoped<IMarketDataContext, MarketDataContext>();
             services.AddScoped<IPredictionService, PredictionService>();
             services.AddScoped<IMarketDataReadRepository, MarketDataReadRepository>();
-            services.AddScoped<IMarketDataReadViewRepository, MarketDataReadViewRepository>();
             services.AddTransient<IOhlcvMappingService, OhlcvMappingService>();
 
             services.AddCors(options =>

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Xtreem.Crusader.Api.Models.Udf
+namespace Xtreem.Crusader.Client.Models
 {
     public class StatusResponse
     {

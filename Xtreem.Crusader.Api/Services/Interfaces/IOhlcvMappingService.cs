@@ -1,4 +1,4 @@
-﻿using Xtreem.Crusader.Api.Models.ML;
+﻿using Xtreem.Crusader.Api.Models;
 using Xtreem.Crusader.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.Data.Models;
 

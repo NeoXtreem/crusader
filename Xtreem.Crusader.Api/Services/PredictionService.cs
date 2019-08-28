@@ -7,7 +7,7 @@ using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Xtreem.Crusader.Api.Attributes;
-using Xtreem.Crusader.Api.Models.ML;
+using Xtreem.Crusader.Api.Models;
 using Xtreem.Crusader.Api.Services.Interfaces;
 using Xtreem.Crusader.Api.Settings;
 

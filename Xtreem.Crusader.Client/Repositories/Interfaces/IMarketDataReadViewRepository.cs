@@ -1,7 +1,7 @@
 ﻿using Xtreem.Crusader.Data.Repositories.Interfaces;
 using Xtreem.Crusader.Data.Types;
 
-namespace Xtreem.Crusader.Api.Repositories.Interfaces
+namespace Xtreem.Crusader.Client.Repositories.Interfaces
 {
     public interface IMarketDataReadViewRepository : IMarketDataReadRepository
     {

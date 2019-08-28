@@ -4,12 +4,12 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NodaTime;
-using Xtreem.Crusader.Api.Models.Udf;
-using Xtreem.Crusader.Api.Repositories.Interfaces;
+using Xtreem.Crusader.Client.Models;
+using Xtreem.Crusader.Client.Repositories.Interfaces;
 using Xtreem.Crusader.Data.Types;
-using Type = Xtreem.Crusader.Api.Types.Type;
+using Type = Xtreem.Crusader.Client.Types.Type;
 
-namespace Xtreem.Crusader.Api.Controllers
+namespace Xtreem.Crusader.Client.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
