@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
-using Xtreem.Crusader.Data.Models;
+using Microsoft.ML;
+using Xtreem.Crusader.Api.Models.ML;
 
 namespace Xtreem.Crusader.Api.Services.Interfaces
 {
     public interface IPredictionService
     {
-        void Initialise(IEnumerable<Ohlcv> klines);
+        void Initialise(IEnumerable<OhlcvInput> ohlcvs);
 
-        void Predict(Ohlcv kline);
+        void Train();
+
+        OhlcvPrediction Predict(OhlcvInput ohlcv);
     }
 }

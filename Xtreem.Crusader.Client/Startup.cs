@@ -24,18 +24,19 @@ namespace Xtreem.Crusader.Client
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddScoped<IPredictionService, PredictionService>();
             services.AddScoped<IHistoricalDataService, HistoricalDataService>();
             services.AddScoped<ICryptoCompareService, CryptoCompareService>();
-
             services.AddScoped<IMarketDataContext, MarketDataContext>();
             services.AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             services.Configure<DataSettings>(Configuration.GetSection("Data"));
+            services.Configure<CrusaderApiSettings>(Configuration.GetSection("CrusaderApi"));
             services.Configure<CryptoCompareSettings>(Configuration.GetSection("CryptoCompare"));
 
-            // In production, the React files will be served from this directory
+            // In production, the React files will be served from this directory.
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";

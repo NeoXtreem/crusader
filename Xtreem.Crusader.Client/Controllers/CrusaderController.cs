@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,20 +12,23 @@ namespace Xtreem.Crusader.Client.Controllers
     public class CrusaderController : Controller
     {
         private readonly ILogger<CrusaderController> _logger;
-        private readonly IHistoricalDataService _historicalDataService;
+        private readonly IPredictionService _predictionService;
+        private CancellationTokenSource _cancellationTokenSource;
 
-        public CrusaderController(ILogger<CrusaderController> logger, IHistoricalDataService historicalDataService)
+        public CrusaderController(ILogger<CrusaderController> logger, IPredictionService predictionService)
         {
             _logger = logger;
-            _historicalDataService = historicalDataService;
+            _predictionService = predictionService;
         }
 
         [HttpPost("[action]")]
         [Route("[action]/{baseCurrency}/{quoteCurrency}")]
         public async Task<ActionResult<object>> Predict(string baseCurrency, string quoteCurrency/*, DateTime to*/)
         {
-            var ohlcvs = await _historicalDataService.GetHistoricalData(baseCurrency, quoteCurrency, Resolution.Minute, DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1000)), DateTime.UtcNow);
-            //_predictionService.Predict();
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            var close = await _predictionService.PredictAsync(baseCurrency, quoteCurrency, Resolution.Minute, DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1000)), DateTime.UtcNow, _cancellationTokenSource.Token);
 
             return Ok();
         }

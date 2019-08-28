@@ -22,14 +22,19 @@ namespace Xtreem.Crusader.Data.Types
         {
             switch (s)
             {
+                case nameof(Minute):
                 case MinuteDescription:
                     return Minute;
+                case nameof(Hour):
                 case HourDescription:
                     return Hour;
+                case nameof(Day):
                 case DayDescription:
                     return Day;
                 default:
-                    throw new FormatException($"String was not recognised as a valid {nameof(Resolution)}.");
+                    return TimeSpan.TryParse(s, out var result)
+                        ? new Resolution(result)
+                        : throw new FormatException($"String was not recognised as a valid {nameof(Resolution)}.");
             }
         }
 

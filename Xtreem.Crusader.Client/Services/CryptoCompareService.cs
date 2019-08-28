@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
@@ -25,7 +26,7 @@ namespace Xtreem.Crusader.Client.Services
             _marketDataReadWriteRepository = marketDataReadWriteRepository;
         }
 
-        public async Task<IEnumerable<Ohlcv>> LoadHistoricalData(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to)
+        public async Task<IEnumerable<Ohlcv>> LoadHistoricalDataAsync(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to, CancellationToken cancellationToken)
         {
             const int maxLimit = 2000;
             var ohlcvs = new List<Ohlcv>();
@@ -33,6 +34,8 @@ namespace Xtreem.Crusader.Client.Services
             // Handle the requested period in batches based on the limitation of the provider API.
             for (var batchTo = to; batchTo > from; batchTo = batchTo.Subtract(maxLimit * resolution.Interval))
             {
+                if (cancellationToken.IsCancellationRequested) break;
+
                 using (var client = new HttpClient {BaseAddress = new Uri(_settings.BaseUrl)})
                 {
                     // Calculate the limit to pass based on the size of the current batch.
@@ -47,7 +50,7 @@ namespace Xtreem.Crusader.Client.Services
                             ("toTs", ((DateTimeOffset)batchTo).ToUniversalTime().ToUnixTimeSeconds().ToString()),
                             ("api_key", _settings.ApiKey),
                             ("limit", limit.ToString())
-                        }.ToDictionary(p => p.key, p => p.value.ToString()))))
+                        }.ToDictionary(p => p.key, p => p.value.ToString())), cancellationToken))
                     {
                         if (response.IsSuccessStatusCode)
                         {

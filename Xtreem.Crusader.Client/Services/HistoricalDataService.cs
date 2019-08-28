@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xtreem.Crusader.Client.Repositories.Interfaces;
 using Xtreem.Crusader.Client.Services.Interfaces;
@@ -20,13 +21,13 @@ namespace Xtreem.Crusader.Client.Services
             _cryptoCompareService = cryptoCompareService;
         }
 
-        public async Task<IEnumerable<Ohlcv>> GetHistoricalData(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to)
+        public async Task<IEnumerable<Ohlcv>> GetHistoricalDataAsync(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to, CancellationToken cancellationToken)
         {
             var newOhlcvs = new List<Ohlcv>();
 
             async Task LoadHistoricalDataForGap(DateTime gapFrom, DateTime gapTo)
             {
-                newOhlcvs.AddRange(await _cryptoCompareService.LoadHistoricalData(baseCurrency, quoteCurrency, resolution, gapFrom, gapTo));
+                newOhlcvs.AddRange(await _cryptoCompareService.LoadHistoricalDataAsync(baseCurrency, quoteCurrency, resolution, gapFrom, gapTo, cancellationToken));
             }
 
             var ohlcvs = _marketDataReadWriteRepository.GetOhlcvs(baseCurrency, quoteCurrency, resolution, from, to).ToArray();
