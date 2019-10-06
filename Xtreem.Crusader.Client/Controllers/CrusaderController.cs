@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Xtreem.Crusader.Client.Services.Interfaces;
+using Xtreem.Crusader.Client.ViewModels;
 using Xtreem.Crusader.Data.Types;
 
 namespace Xtreem.Crusader.Client.Controllers
@@ -12,25 +13,30 @@ namespace Xtreem.Crusader.Client.Controllers
     public class CrusaderController : Controller
     {
         private readonly ILogger<CrusaderController> _logger;
-        private readonly IPredictionService _predictionService;
-        private CancellationTokenSource _cancellationTokenSource;
+        private readonly IMLService _mlService;
+        private readonly ICurrencyPairChartPeriodMappingService _currencyPairChartPeriodMappingService;
+        private CancellationTokenSource _cts;
 
-        public CrusaderController(ILogger<CrusaderController> logger, IPredictionService predictionService)
+        public CrusaderController(ILogger<CrusaderController> logger, IMLService mlService, ICurrencyPairChartPeriodMappingService currencyPairChartPeriodMappingService)
         {
             _logger = logger;
-            _predictionService = predictionService;
+            _mlService = mlService;
+            _currencyPairChartPeriodMappingService = currencyPairChartPeriodMappingService;
         }
 
         [HttpPost("[action]")]
-        [Route("[action]/{baseCurrency}/{quoteCurrency}")]
-        public async Task<ActionResult<object>> Predict(string baseCurrency, string quoteCurrency/*, DateTime to*/)
+        public async Task<ActionResult<float?>> Predict([FromBody] CurrencyPairChartPeriodViewModel currencyPairChartPeriod)
         {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource = new CancellationTokenSource();
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
 
-            var close = await _predictionService.PredictAsync(baseCurrency, quoteCurrency, Resolution.Minute, DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1000)), DateTime.UtcNow, _cancellationTokenSource.Token);
+            currencyPairChartPeriod.Resolution = Resolution.Minute.ToString();
+            currencyPairChartPeriod.From = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1000));
+            currencyPairChartPeriod.To = DateTime.UtcNow;
 
-            return Ok();
+            var close = await _mlService.PredictAsync(_currencyPairChartPeriodMappingService.Map(currencyPairChartPeriod), _cts.Token);
+
+            return Ok(close);
         }
     }
 }

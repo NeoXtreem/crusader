@@ -10,7 +10,7 @@ namespace Xtreem.Crusader.Data.Types
 
         public TimeSpan Interval { get; }
 
-        private Resolution(TimeSpan interval) => Interval = interval;
+        public Resolution(TimeSpan interval) => Interval = interval;
 
         public static Resolution Minute => new Resolution(TimeSpan.FromMinutes(1));
 
@@ -38,9 +38,7 @@ namespace Xtreem.Crusader.Data.Types
             }
         }
 
-        public int IntervalsInPeriod(TimeSpan period) => (int)(period / Interval);
-
-        public string ToTradingViewFormat() => this == Minute ? MinuteDescription : this == Hour ? HourDescription : this == Day ? DayDescription : Interval.ToString();
+        public int IntervalsInPeriod(TimeSpan period) => (int)(period.Ticks / Interval.Ticks); //TODO: Remove .Ticks when .NET Standard 2.1 is released.
 
         public override string ToString() => this == Minute ? nameof(Minute) : this == Hour ? nameof(Hour) : this == Day ? nameof(Day) : Interval.ToString();
 

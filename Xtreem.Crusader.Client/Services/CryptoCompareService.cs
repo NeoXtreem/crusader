@@ -11,7 +11,6 @@ using Xtreem.Crusader.Client.Repositories.Interfaces;
 using Xtreem.Crusader.Client.Services.Interfaces;
 using Xtreem.Crusader.Client.Settings;
 using Xtreem.Crusader.Data.Models;
-using Xtreem.Crusader.Data.Types;
 
 namespace Xtreem.Crusader.Client.Services
 {
@@ -26,10 +25,18 @@ namespace Xtreem.Crusader.Client.Services
             _marketDataReadWriteRepository = marketDataReadWriteRepository;
         }
 
-        public async Task<IEnumerable<Ohlcv>> LoadHistoricalDataAsync(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Ohlcv>> LoadHistoricalDataAsync(CurrencyPairChartPeriod currencyPairChartPeriod, CancellationToken cancellationToken)
         {
             const int maxLimit = 2000;
             var ohlcvs = new List<Ohlcv>();
+
+            var currencyPairChart = currencyPairChartPeriod.CurrencyPairChart;
+            var currencyPair = currencyPairChart.CurrencyPair;
+            var from = currencyPairChartPeriod.From;
+            var to = currencyPairChartPeriod.To;
+            var resolution = currencyPairChart.Resolution;
+            var baseCurrency = currencyPair.BaseCurrency;
+            var quoteCurrency = currencyPair.QuoteCurrency;
 
             // Handle the requested period in batches based on the limitation of the provider API.
             for (var batchTo = to; batchTo > from; batchTo = batchTo.Subtract(maxLimit * resolution.Interval))

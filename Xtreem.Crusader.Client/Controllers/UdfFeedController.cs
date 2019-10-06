@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using Xtreem.Crusader.Client.Models;
 using Xtreem.Crusader.Client.Repositories.Interfaces;
+using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Types;
 using Type = Xtreem.Crusader.Client.Types.Type;
 
@@ -30,7 +30,7 @@ namespace Xtreem.Crusader.Client.Controllers
         {
             return new
             {
-                supported_resolutions = new[] { "1", "5", "15", "30", "60", "1D", "1W", "1M" },
+                supported_resolutions = new[] {"1", "5", "15", "30", "60", "1D", "1W", "1M"},
                 supports_group_request = false,
                 supports_marks = false,
                 supports_search = true,
@@ -53,7 +53,7 @@ namespace Xtreem.Crusader.Client.Controllers
                 HasIntraday = true,
                 Description = "BTCUSDT",
                 Type = Type.Crypto,
-                SupportedResolutions = new[] { "1", "60", "1D", "W" },
+                SupportedResolutions = new[] {"1", "60", "1D", "W"},
                 PriceScale = 100
             };
         }
@@ -71,7 +71,11 @@ namespace Xtreem.Crusader.Client.Controllers
         {
             _logger.LogInformation($"Requesting history for {symbol} from {DateTimeOffset.FromUnixTimeSeconds(from)} to {DateTimeOffset.FromUnixTimeSeconds(to)} at {resolution} resolution.");
 
-            var ohlcvs = _marketDataReadViewRepository.GetOhlcvs(symbol, "USD", Resolution.Parse(resolution), from, to).OrderBy(o => o.Time).ToArray();
+            var ohlcvs = _marketDataReadViewRepository.GetOhlcvs(new CurrencyPairChart
+            {
+                CurrencyPair = new CurrencyPair {BaseCurrency = symbol, QuoteCurrency = "USD"},
+                Resolution = Resolution.Parse(resolution)
+            }, from, to).OrderBy(o => o.Time).ToArray();
 
             if (ohlcvs.Any())
             {
@@ -89,39 +93,7 @@ namespace Xtreem.Crusader.Client.Controllers
 
             var nextTime = _marketDataReadViewRepository.GetNextTime(symbol, "USD", Resolution.Parse(resolution), from);
             _logger.LogInformation("No data available." + (nextTime != default ? $" Next time with data is {DateTimeOffset.FromUnixTimeSeconds(nextTime)}" : String.Empty));
-            return new NoDataResponse { NextTime = nextTime };
-        }
-
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            return new[] { "value1", "value2" };
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return new NoDataResponse {NextTime = nextTime};
         }
     }
 }

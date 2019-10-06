@@ -1,7 +1,13 @@
-﻿namespace Xtreem.Crusader.Client.Settings
+﻿using JetBrains.Annotations;
+
+namespace Xtreem.Crusader.Client.Settings
 {
     public class CrusaderApiSettings
     {
-        public string BaseUrl { get; set; }
+        [UsedImplicitly]
+        public string CapeApiBaseUrl { get; set; }
+
+        [UsedImplicitly]
+        public string MLApiBaseUrl { get; set; }
     }
 }

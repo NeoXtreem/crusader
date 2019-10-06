@@ -26,12 +26,13 @@ namespace Xtreem.Crusader.Client
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddScoped<IPredictionService, PredictionService>();
+            services.AddScoped<IMLService, MLService>();
             services.AddScoped<IHistoricalDataService, HistoricalDataService>();
             services.AddScoped<ICryptoCompareService, CryptoCompareService>();
             services.AddScoped<IMarketDataContext, MarketDataContext>();
             services.AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>();
             services.AddScoped<IMarketDataReadViewRepository, MarketDataReadViewRepository>();
+            services.AddTransient<ICurrencyPairChartPeriodMappingService, CurrencyPairChartPeriodMappingService>();
 
             services.Configure<DataSettings>(Configuration.GetSection("Data"));
             services.Configure<CrusaderApiSettings>(Configuration.GetSection("CrusaderApi"));
@@ -73,7 +74,7 @@ namespace Xtreem.Crusader.Client
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseReactDevelopmentServer("start");
                 }
             });
         }

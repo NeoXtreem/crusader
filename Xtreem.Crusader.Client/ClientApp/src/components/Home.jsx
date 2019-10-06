@@ -6,11 +6,11 @@ export class Home extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { base: 'BTC', quote: 'USD', status: 0 };
+    this.state = { baseCurrency: 'BTC', quoteCurrency: 'USD', status: 0 };
     this.handleErrors = this.handleErrors.bind(this);
     this.predict = this.predict.bind(this);
-    this.updateBase = this.updateBase.bind(this);
-    this.updateQuote = this.updateQuote.bind(this);
+    this.updateBaseCurrency = this.updateBaseCurrency.bind(this);
+    this.updateQuoteCurrency = this.updateQuoteCurrency.bind(this);
     this.tvChart = React.createRef();
   }
 
@@ -36,13 +36,14 @@ export class Home extends Component {
   }
 
   predict() {
-      if (this.state.base !== '' && this.state.quote !== '') {
-      window.fetch(`api/crusader/predict/${this.state.base}/${this.state.quote}`,
+    if (this.state.baseCurrency !== '' && this.state.quoteCurrency !== '') {
+      window.fetch(`api/crusader/predict`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({ CurrencyPairBaseCurrency: this.state.baseCurrency, CurrencyPairQuoteCurrency: this.state.quoteCurrency })
         })
         .then(this.handleErrors)
         .then(response => response.json())
@@ -57,22 +58,22 @@ export class Home extends Component {
     }
   }
 
-  updateBase(e) {
-    this.setState({ base: e.target.value });
+  updateBaseCurrency(e) {
+    this.setState({ baseCurrency: e.target.value });
   }
 
-  updateQuote(e) {
-    this.setState({ quote: e.target.value });
+  updateQuoteCurrency(e) {
+    this.setState({ quoteCurrency: e.target.value });
   }
 
-  render () {
+  render() {
     const predict = 'Predict';
 
     return (
       <div>
         <p>
-          <span style={{ paddingRight: 10 }}><strong>Base:</strong></span><input type="text" placeholder="BTC" value={this.state.base} onChange={this.updateBase} />
-          <span style={{ paddingLeft: 10, paddingRight: 10 }}><strong>Quote:</strong></span><input type="text" placeholder="USD" value={this.state.quote} onChange={this.updateQuote} />
+          <span style={{ paddingRight: 10 }}><strong>Base Currency:</strong></span><input type="text" placeholder="BTC" value={this.state.baseCurrency} onChange={this.updateBaseCurrency} />
+          <span style={{ paddingLeft: 10, paddingRight: 10 }}><strong>Quote Currency:</strong></span><input type="text" placeholder="USD" value={this.state.quoteCurrency} onChange={this.updateQuoteCurrency} />
         </p>
         <p><button className="btn btn-primary" onClick={this.predict}>{predict}</button></p>
         <TVChartContainer ref={this.tvChart} />

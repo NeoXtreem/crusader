@@ -4,7 +4,6 @@ using System.Linq;
 using Xtreem.Crusader.Data.Contexts.Interfaces;
 using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Repositories.Interfaces;
-using Xtreem.Crusader.Data.Types;
 
 namespace Xtreem.Crusader.Data.Repositories
 {
@@ -14,14 +13,23 @@ namespace Xtreem.Crusader.Data.Repositories
 
         public MarketDataReadRepository(IMarketDataContext context) => _context = context;
 
-        public IEnumerable<Ohlcv> GetOhlcvs(string baseCurrency, string quoteCurrency, Resolution resolution, long from, long to)
+        public IEnumerable<Ohlcv> GetOhlcvs(CurrencyPairChart currencyPairChart, long from, long to)
         {
-            return _context.GetHistoricalOhlcvsQuery().Where(o => o.Base == baseCurrency && o.Quote == quoteCurrency && o.Resolution == resolution.ToString() && o.Time >= from && o.Time <= to).AsEnumerable();
+            var currencyPair = currencyPairChart.CurrencyPair;
+            return _context.GetHistoricalOhlcvsQuery().Where(o =>
+                o.Base == currencyPair.BaseCurrency &&
+                o.Quote == currencyPair.QuoteCurrency &&
+                o.Resolution == currencyPairChart.Resolution.ToString() &&
+                o.Time >= from &&
+                o.Time <= to).AsEnumerable();
         }
 
-        public IEnumerable<Ohlcv> GetOhlcvs(string baseCurrency, string quoteCurrency, Resolution resolution, DateTime from, DateTime to)
+        public IEnumerable<Ohlcv> GetOhlcvs(CurrencyPairChartPeriod currencyPairChartPeriod)
         {
-            return GetOhlcvs(baseCurrency, quoteCurrency, resolution, ((DateTimeOffset)from).ToUnixTimeSeconds(), ((DateTimeOffset)to).ToUnixTimeSeconds());
+            return GetOhlcvs(
+                currencyPairChartPeriod.CurrencyPairChart,
+                ((DateTimeOffset)currencyPairChartPeriod.From).ToUnixTimeSeconds(),
+                ((DateTimeOffset)currencyPairChartPeriod.To).ToUnixTimeSeconds());
         }
     }
 }
