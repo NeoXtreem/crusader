@@ -25,7 +25,10 @@ namespace Xtreem.Crusader.Client
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            // ReSharper disable once CommentTypo
+            //TODO: Added AddNewtonsoftJson to resolve undesired behaviour on TradingView as per https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#jsonnet-support. Periodically check if resolved.
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson();
 
             services.AddScoped<IMLService, MLService>();
             services.AddScoped<IHistoricalDataService, HistoricalDataService>();
