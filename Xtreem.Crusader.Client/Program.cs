@@ -1,14 +1,15 @@
+using JetBrains.Annotations;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Xtreem.Crusader.Client
 {
+    [UsedImplicitly]
     public class Program
     {
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
-
 
             //var klineMappingService = new KlineMappingService();
             //var predictionService = new PredictionService();
@@ -25,7 +26,6 @@ namespace Xtreem.Crusader.Client
 
             //    Console.ReadLine();
             //}
-
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

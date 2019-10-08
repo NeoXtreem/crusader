@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore;
+﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Xtreem.Crusader.ML.Api
 {
+    [UsedImplicitly]
     public class Program
     {
         public static void Main(string[] args)

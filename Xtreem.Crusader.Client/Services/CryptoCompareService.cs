@@ -43,38 +43,36 @@ namespace Xtreem.Crusader.Client.Services
             {
                 if (cancellationToken.IsCancellationRequested) break;
 
-                using (var client = new HttpClient {BaseAddress = new Uri(_settings.BaseUrl)})
-                {
-                    // Calculate the limit to pass based on the size of the current batch.
-                    var limit = (batchTo - from > maxLimit * resolution.Interval ? maxLimit : resolution.IntervalsInPeriod(batchTo - from)) - 1;
-                    if (limit < 0) continue;
+                using var client = new HttpClient {BaseAddress = new Uri(_settings.BaseUrl)};
 
-                    using (var response = await client.GetAsync(QueryHelpers.AddQueryString($"histo{resolution.ToString().ToLowerInvariant()}",
-                        new (string key, string value)[]
-                        {
-                            ("fsym", baseCurrency),
-                            ("tsym", quoteCurrency),
-                            ("toTs", ((DateTimeOffset)batchTo).ToUniversalTime().ToUnixTimeSeconds().ToString()),
-                            ("api_key", _settings.ApiKey),
-                            ("limit", limit.ToString())
-                        }.ToDictionary(p => p.key, p => p.value.ToString())), cancellationToken))
+                // Calculate the limit to pass based on the size of the current batch.
+                var limit = (batchTo - from > maxLimit * resolution.Interval ? maxLimit : resolution.IntervalsInPeriod(batchTo - from)) - 1;
+                if (limit < 0) continue;
+
+                using var response = await client.GetAsync(QueryHelpers.AddQueryString($"histo{resolution.ToString().ToLowerInvariant()}",
+                    new (string key, string value)[]
                     {
-                        if (response.IsSuccessStatusCode)
-                        {
-                            ohlcvs.AddRange(JObject.Parse(await response.Content.ReadAsStringAsync()).SelectTokens("$.Data[*]").Select(t =>
-                            {
-                                var ohlcv = t.ToObject<Ohlcv>();
-                                ohlcv.Base = baseCurrency;
-                                ohlcv.Quote = quoteCurrency;
-                                ohlcv.Resolution = resolution.ToString();
-                                return ohlcv;
-                            }));
-                        }
-                    }
+                        ("fsym", baseCurrency),
+                        ("tsym", quoteCurrency),
+                        ("toTs", ((DateTimeOffset)batchTo).ToUniversalTime().ToUnixTimeSeconds().ToString()),
+                        ("api_key", _settings.ApiKey),
+                        ("limit", limit.ToString())
+                    }.ToDictionary(p => p.key, p => p.value.ToString())), cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    ohlcvs.AddRange(JObject.Parse(await response.Content.ReadAsStringAsync()).SelectTokens("$.Data[*]").Select(t =>
+                    {
+                        var ohlcv = t.ToObject<Ohlcv>();
+                        ohlcv.Base = baseCurrency;
+                        ohlcv.Quote = quoteCurrency;
+                        ohlcv.Resolution = resolution.ToString();
+                        return ohlcv;
+                    }));
                 }
             }
 
-            await _marketDataReadWriteRepository.AddOhlcvsAsync(ohlcvs, resolution);
+            await _marketDataReadWriteRepository.AddOhlcvsAsync(ohlcvs);
             return ohlcvs;
         }
     }

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore;
+﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Xtreem.Crusader.Cape.Api
 {
+    [UsedImplicitly]
     public class Program
     {
         public static void Main(string[] args)

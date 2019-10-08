@@ -4,7 +4,6 @@ using Xtreem.Crusader.Client.Repositories.Interfaces;
 using Xtreem.Crusader.Data.Contexts.Interfaces;
 using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Repositories;
-using Xtreem.Crusader.Data.Types;
 
 namespace Xtreem.Crusader.Client.Repositories
 {
@@ -14,7 +13,7 @@ namespace Xtreem.Crusader.Client.Repositories
 
         public MarketDataReadWriteRepository(IMarketDataContext context) : base(context) => _context = context;
 
-        public async Task AddOhlcvsAsync(IEnumerable<Ohlcv> items, Resolution resolution)
+        public async Task AddOhlcvsAsync(IEnumerable<Ohlcv> items)
         {
             await (await _context.GetHistoricalOhlcvBulkExecutorAsync()).BulkImportAsync(items, disableAutomaticIdGeneration: false);
         }

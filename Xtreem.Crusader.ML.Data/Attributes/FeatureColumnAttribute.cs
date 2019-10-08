@@ -5,7 +5,7 @@ namespace Xtreem.Crusader.ML.Data.Attributes
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class FeatureColumnAttribute : Attribute
     {
-        public bool Encode { get; set; }
+        public bool Encode { get; }
 
         public FeatureColumnAttribute() : this(false)
         {
