@@ -37,7 +37,7 @@ export class Home extends Component {
 
   predict() {
     if (this.state.baseCurrency !== '' && this.state.quoteCurrency !== '') {
-      window.fetch(`api/crusader/predict`,
+      window.fetch(`crusader/predict`,
         {
           method: 'POST',
           headers: {

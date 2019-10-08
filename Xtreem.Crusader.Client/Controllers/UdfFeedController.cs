@@ -11,7 +11,7 @@ using Type = Xtreem.Crusader.Client.Types.Type;
 
 namespace Xtreem.Crusader.Client.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UdfFeedController : ControllerBase
     {

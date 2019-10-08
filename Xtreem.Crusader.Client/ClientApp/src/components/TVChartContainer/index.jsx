@@ -13,7 +13,7 @@ export class TVChartContainer extends React.PureComponent {
     symbol: 'BTC',
     interval: 'M',
     containerId: 'tv_chart_container',
-    datafeedUrl: 'api/udffeed',
+    datafeedUrl: 'udffeed',
     libraryPath: '/charting_library/',
     chartsStorageUrl: 'https://saveload.tradingview.com',
     chartsStorageApiVersion: '1.1',

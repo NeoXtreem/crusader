@@ -8,8 +8,8 @@ using Xtreem.Crusader.ML.Data.Services.Interfaces;
 
 namespace Xtreem.Crusader.ML.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class MLController : ControllerBase
     {
         private readonly ILogger<MLController> _logger;
@@ -26,7 +26,7 @@ namespace Xtreem.Crusader.ML.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] CurrencyPairChartPeriod currencyPairChartPeriod)
+        public ActionResult Post(CurrencyPairChartPeriod currencyPairChartPeriod)
         {
             if (!ModelState.IsValid)
             {

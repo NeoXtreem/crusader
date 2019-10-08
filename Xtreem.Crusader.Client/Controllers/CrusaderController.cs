@@ -9,7 +9,8 @@ using Xtreem.Crusader.Data.Types;
 
 namespace Xtreem.Crusader.Client.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiController]
+    [Route("[controller]")]
     public class CrusaderController : Controller
     {
         private readonly ILogger<CrusaderController> _logger;
@@ -25,7 +26,7 @@ namespace Xtreem.Crusader.Client.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<float?>> Predict([FromBody] CurrencyPairChartPeriodViewModel currencyPairChartPeriod)
+        public async Task<ActionResult<float?>> Predict(CurrencyPairChartPeriodViewModel currencyPairChartPeriod)
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();

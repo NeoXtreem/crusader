@@ -29,6 +29,8 @@ namespace Xtreem.Crusader.ML.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // ReSharper disable once CommentTypo
+            //TODO: AddNewtonsoftJson was added for Resolution type to deserialize as it has a readonly property as per https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#jsonnet-support. Revert if https://github.com/dotnet/corefx/issues/40602 is resolved.
             services.AddControllers()
                 .AddNewtonsoftJson();
 

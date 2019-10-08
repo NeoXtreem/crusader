@@ -6,8 +6,8 @@ using Xtreem.Crusader.ML.Data.Services.Interfaces;
 
 namespace Xtreem.Crusader.Cape.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class CapeController : ControllerBase
     {
         private readonly ILogger<CapeController> _logger;
