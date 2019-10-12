@@ -26,7 +26,7 @@ namespace Xtreem.Crusader.Client
         public void ConfigureServices(IServiceCollection services)
         {
             // ReSharper disable once CommentTypo
-            //TODO: Added AddNewtonsoftJson to resolve undesired behaviour on TradingView as per https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#jsonnet-support. Periodically check if resolved.
+            //TODO: Call AddNewtonsoftJson to resolve undesired behaviour on TradingView as per https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#jsonnet-support. Periodically check if resolved.
             services.AddControllersWithViews()
                 .AddNewtonsoftJson();
 

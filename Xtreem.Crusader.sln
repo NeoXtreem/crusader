@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xtreem.Crusader.Cape.Api", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xtreem.Crusader.ML.Api", "Xtreem.Crusader.ML.Api\Xtreem.Crusader.ML.Api.csproj", "{05A25047-FAC1-4101-A3A2-79ADCF1CB9D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xtreem.Crusader.ML.Data", "Xtreem.Crusader.ML.Data\Xtreem.Crusader.ML.Data.csproj", "{669EAF8C-100D-4FB3-8EFD-A33BD829E6DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xtreem.Crusader.ML.Data", "Xtreem.Crusader.ML.Data\Xtreem.Crusader.ML.Data.csproj", "{669EAF8C-100D-4FB3-8EFD-A33BD829E6DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
