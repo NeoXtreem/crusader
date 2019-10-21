@@ -8,7 +8,7 @@ namespace Xtreem.Crusader.ML.Api.Services.Interfaces
     {
         void Initialise(IEnumerable<OhlcvInput> ohlcvs);
 
-        void Train();
+        void Train<TOutput>() where TOutput : class;
 
         FileStream GetModel();
     }

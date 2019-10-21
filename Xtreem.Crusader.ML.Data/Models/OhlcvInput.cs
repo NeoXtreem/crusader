@@ -1,39 +1,38 @@
 ﻿using JetBrains.Annotations;
-using Microsoft.ML.Data;
 using Xtreem.Crusader.ML.Data.Attributes;
 
 namespace Xtreem.Crusader.ML.Data.Models
 {
     public class OhlcvInput
     {
-        [FeatureColumn(true), UsedImplicitly]
+        [EncodedColumn, UsedImplicitly]
         public string Base { get; set; }
 
-        [FeatureColumn(true), UsedImplicitly]
+        [EncodedColumn, UsedImplicitly]
         public string Quote { get; set; }
 
-        [FeatureColumn(true), UsedImplicitly]
+        [EncodedColumn, UsedImplicitly]
         public string Resolution { get; set; }
 
-        [FeatureColumn(true), UsedImplicitly]
+        [EncodedColumn, UsedImplicitly]
         public long Time { get; set; }
 
-        [FeatureColumn, UsedImplicitly]
+        [LabelColumn(nameof(OhlcvPrediction.OpenPrediction)), UsedImplicitly]
         public float Open { get; set; }
 
-        [ColumnName("Label"), UsedImplicitly]
+        [LabelColumn(nameof(OhlcvPrediction.ClosePrediction)), UsedImplicitly]
         public float Close { get; set; }
 
-        [FeatureColumn, UsedImplicitly]
+        [LabelColumn(nameof(OhlcvPrediction.HighPrediction)), UsedImplicitly]
         public float High { get; set; }
 
-        [FeatureColumn, UsedImplicitly]
+        [LabelColumn(nameof(OhlcvPrediction.LowPrediction)), UsedImplicitly]
         public float Low { get; set; }
 
-        [FeatureColumn, UsedImplicitly]
+        [LabelColumn(nameof(OhlcvPrediction.VolumeFromPrediction)), UsedImplicitly]
         public float VolumeFrom { get; set; }
 
-        [FeatureColumn, UsedImplicitly]
+        [LabelColumn(nameof(OhlcvPrediction.VolumeToPrediction)), UsedImplicitly]
         public float VolumeTo { get; set; }
     }
 }

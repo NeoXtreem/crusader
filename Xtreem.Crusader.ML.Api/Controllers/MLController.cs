@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Repositories.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
+using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.ML.Data.Services.Interfaces;
 
 namespace Xtreem.Crusader.ML.Api.Controllers
@@ -34,7 +35,7 @@ namespace Xtreem.Crusader.ML.Api.Controllers
             }
 
             _modelService.Initialise(_ohlcvMappingService.Map(_marketDataReadRepository.GetOhlcvs(currencyPairChartPeriod)));
-            _modelService.Train();
+            _modelService.Train<OhlcvInput>();
 
             return Ok();
         }
