@@ -12,9 +12,7 @@ namespace Xtreem.Crusader.Data.Services.Abstractions
         {
             Mapper = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<T1, T2>();
-                cfg.CreateMap<T2, T1>();
-
+                cfg.CreateMap<T1, T2>().ReverseMap();
             }).CreateMapper();
         }
 

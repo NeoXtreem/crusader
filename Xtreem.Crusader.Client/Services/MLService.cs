@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,10 +26,10 @@ namespace Xtreem.Crusader.Client.Services
         {
             var ohlcvs = await _historicalDataService.GetHistoricalDataAsync(currencyPairChartPeriod, cancellationToken);
 
-            using var mlClient = new HttpClient {BaseAddress = new Uri(_settings.MLApiBaseUrl)};
-            var mlClientResponse = (await mlClient.PostAsJsonAsync("ml", currencyPairChartPeriod, cancellationToken));
+            // Build the ML model.
+            var mlClientResponse = await new HttpClient {BaseAddress = new Uri(_settings.MLApiBaseUrl)}.PostAsJsonAsync("ml", currencyPairChartPeriod, cancellationToken);
 
-            if ((await mlClient.PostAsJsonAsync("ml", currencyPairChartPeriod, cancellationToken)).IsSuccessStatusCode)
+            if (mlClientResponse.IsSuccessStatusCode)
             {
                 var predictionPeriod = new CurrencyPairChartPeriod
                 {
@@ -38,15 +37,15 @@ namespace Xtreem.Crusader.Client.Services
                     DateTimeInterval = new DateTimeInterval {From = DateTime.UtcNow, To = currencyPairChartPeriod.DateTimeInterval.To}
                 };
 
-                using var capeClient = new HttpClient {BaseAddress = new Uri(_settings.CapeApiBaseUrl)};
-                var capeClientResponse = await capeClient.PostAsJsonAsync("cape", predictionPeriod, cancellationToken);
+                // Predict future prices.
+                var capeClientResponse = await new HttpClient {BaseAddress = new Uri(_settings.CapeApiBaseUrl)}.PostAsJsonAsync("cape", predictionPeriod, cancellationToken);
 
                 if (capeClientResponse.IsSuccessStatusCode)
                 {
                     return await capeClientResponse.Content.ReadAsAsync<ReadOnlyCollection<Ohlcv>>(cancellationToken);
                 }
 
-                throw new HttpClientException($"CAPE request unsuccessful: {mlClientResponse.ReasonPhrase}") {Response = capeClientResponse};
+                throw new HttpClientException($"CAPE request unsuccessful: {capeClientResponse.ReasonPhrase}") {Response = capeClientResponse};
             }
 
             throw new HttpClientException($"ML request unsuccessful: {mlClientResponse.ReasonPhrase}") {Response = mlClientResponse};

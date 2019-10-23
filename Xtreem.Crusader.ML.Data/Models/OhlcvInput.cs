@@ -3,20 +3,8 @@ using Xtreem.Crusader.ML.Data.Attributes;
 
 namespace Xtreem.Crusader.ML.Data.Models
 {
-    public class OhlcvInput
+    public class OhlcvInput : CurrencyPairChartTime
     {
-        [EncodedColumn, UsedImplicitly]
-        public string Base { get; set; }
-
-        [EncodedColumn, UsedImplicitly]
-        public string Quote { get; set; }
-
-        [EncodedColumn, UsedImplicitly]
-        public string Resolution { get; set; }
-
-        [EncodedColumn, UsedImplicitly]
-        public long Time { get; set; }
-
         [LabelColumn(nameof(OhlcvPrediction.OpenPrediction)), UsedImplicitly]
         public float Open { get; set; }
 

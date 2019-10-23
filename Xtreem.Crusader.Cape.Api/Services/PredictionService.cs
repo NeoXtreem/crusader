@@ -25,6 +25,7 @@ namespace Xtreem.Crusader.Cape.Api.Services
                 {
                     Base = predictionPeriod.CurrencyPairChart.CurrencyPair.BaseCurrency,
                     Quote = predictionPeriod.CurrencyPairChart.CurrencyPair.QuoteCurrency,
+                    Resolution = predictionPeriod.CurrencyPairChart.Resolution.ToString(),
                     Time = ((DateTimeOffset)(predictionPeriod.DateTimeInterval.From + predictionPeriod.CurrencyPairChart.Resolution.Interval * i)).ToUnixTimeSeconds()
                 });
 

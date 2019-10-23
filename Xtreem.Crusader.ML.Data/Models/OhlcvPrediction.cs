@@ -2,7 +2,7 @@
 
 namespace Xtreem.Crusader.ML.Data.Models
 {
-    public class OhlcvPrediction : OhlcvInput
+    public class OhlcvPrediction : CurrencyPairChartTime
     {
         [UsedImplicitly]
         public float OpenPrediction;
