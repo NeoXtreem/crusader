@@ -38,7 +38,7 @@ namespace Xtreem.Crusader.Data.Types
             }
         }
 
-        public int IntervalsInPeriod(TimeSpan period) => (int)(period.Ticks / Interval.Ticks); //TODO: Remove .Ticks when .NET Standard 2.1 is released.
+        public int IntervalsInPeriod(TimeSpan period) => (int)(period / Interval);
 
         public override string ToString() => this == Minute ? nameof(Minute) : this == Hour ? nameof(Hour) : this == Day ? nameof(Day) : Interval.ToString();
 

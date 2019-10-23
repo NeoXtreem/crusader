@@ -6,7 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Xtreem.Crusader.Client.Exceptions;
+using Xtreem.Crusader.Client.Models;
 using Xtreem.Crusader.Client.Repositories.Interfaces;
 using Xtreem.Crusader.Client.Services.Interfaces;
 using Xtreem.Crusader.Client.Settings;
@@ -32,8 +34,8 @@ namespace Xtreem.Crusader.Client.Services
 
             var currencyPairChart = currencyPairChartPeriod.CurrencyPairChart;
             var currencyPair = currencyPairChart.CurrencyPair;
-            var from = currencyPairChartPeriod.From;
-            var to = currencyPairChartPeriod.To;
+            var from = currencyPairChartPeriod.DateTimeInterval.From;
+            var to = currencyPairChartPeriod.DateTimeInterval.To;
             var resolution = currencyPairChart.Resolution;
             var baseCurrency = currencyPair.BaseCurrency;
             var quoteCurrency = currencyPair.QuoteCurrency;
@@ -61,14 +63,26 @@ namespace Xtreem.Crusader.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    ohlcvs.AddRange(JObject.Parse(await response.Content.ReadAsStringAsync()).SelectTokens("$.Data[*]").Select(t =>
+                    var historicalDataResponse = JsonConvert.DeserializeObject<HistoricalDataResponse>(await response.Content.ReadAsStringAsync());
+
+                    if (historicalDataResponse.Response == "Success")
                     {
-                        var ohlcv = t.ToObject<Ohlcv>();
-                        ohlcv.Base = baseCurrency;
-                        ohlcv.Quote = quoteCurrency;
-                        ohlcv.Resolution = resolution.ToString();
-                        return ohlcv;
-                    }));
+                        ohlcvs.AddRange(historicalDataResponse.Data.Select(o =>
+                        {
+                            o.Base = baseCurrency;
+                            o.Quote = quoteCurrency;
+                            o.Resolution = resolution.ToString();
+                            return o;
+                        }));
+                    }
+                    else
+                    {
+                        throw new HistoricalDataException(historicalDataResponse.Message) {Response = historicalDataResponse};
+                    }
+                }
+                else
+                {
+                    throw new HttpClientException($"Historical data request unsuccessful: {response.ReasonPhrase}") {Response = response};
                 }
             }
 

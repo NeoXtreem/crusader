@@ -28,8 +28,8 @@ namespace Xtreem.Crusader.Data.Repositories
         {
             return GetOhlcvs(
                 currencyPairChartPeriod.CurrencyPairChart,
-                ((DateTimeOffset)currencyPairChartPeriod.From).ToUnixTimeSeconds(),
-                ((DateTimeOffset)currencyPairChartPeriod.To).ToUnixTimeSeconds());
+                ((DateTimeOffset)currencyPairChartPeriod.DateTimeInterval.From).ToUnixTimeSeconds(),
+                ((DateTimeOffset)currencyPairChartPeriod.DateTimeInterval.To).ToUnixTimeSeconds());
         }
     }
 }

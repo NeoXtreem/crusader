@@ -29,11 +29,6 @@ namespace Xtreem.Crusader.ML.Api.Controllers
         [HttpPost]
         public ActionResult Post(CurrencyPairChartPeriod currencyPairChartPeriod)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             _modelService.Initialise(_ohlcvMappingService.Map(_marketDataReadRepository.GetOhlcvs(currencyPairChartPeriod)));
             _modelService.Train<OhlcvInput>();
 

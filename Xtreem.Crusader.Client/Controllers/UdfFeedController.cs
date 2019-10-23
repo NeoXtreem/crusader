@@ -30,7 +30,7 @@ namespace Xtreem.Crusader.Client.Controllers
         {
             return new
             {
-                supported_resolutions = new[] {"1", "5", "15", "30", "60", "1D", "1W", "1M"},
+                supported_resolutions = new[] {"1", "5", "15", "30", "60", "D", "W", "M"},
                 supports_group_request = false,
                 supports_marks = false,
                 supports_search = true,
@@ -53,7 +53,7 @@ namespace Xtreem.Crusader.Client.Controllers
                 HasIntraday = true,
                 Description = "BTCUSDT",
                 Type = Type.Crypto,
-                SupportedResolutions = new[] {"1", "60", "1D", "W"},
+                SupportedResolutions = new[] {"1", "60", "D", "W"},
                 PriceScale = 100
             };
         }

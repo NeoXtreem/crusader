@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Microsoft.Extensions.ML;
 using Xtreem.Crusader.Cape.Api.Services.Interfaces;
+using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.Utilities;
 
 namespace Xtreem.Crusader.Cape.Api.Services
 {
@@ -14,11 +18,17 @@ namespace Xtreem.Crusader.Cape.Api.Services
             _predictionEnginePool = predictionEnginePool;
         }
 
-        public OhlcvPrediction Predict(OhlcvInput ohlcv)
+        public ReadOnlyCollection<OhlcvPrediction> Predict(CurrencyPairChartPeriod predictionPeriod)
         {
-            var prediction = _predictionEnginePool.Predict(ohlcv);
-            Console.WriteLine($"Predicted close: {prediction.ClosePrediction:0.####}, actual close: {prediction.Close:0.####}");
-            return prediction;
+            var ohlcvs = Enumerable.Range(0, Math.Max(0, predictionPeriod.CurrencyPairChart.Resolution.IntervalsInPeriod(predictionPeriod.DateTimeInterval.To - predictionPeriod.DateTimeInterval.From)))
+                .Select(i => new OhlcvInput
+                {
+                    Base = predictionPeriod.CurrencyPairChart.CurrencyPair.BaseCurrency,
+                    Quote = predictionPeriod.CurrencyPairChart.CurrencyPair.QuoteCurrency,
+                    Time = ((DateTimeOffset)(predictionPeriod.DateTimeInterval.From + predictionPeriod.CurrencyPairChart.Resolution.Interval * i)).ToUnixTimeSeconds()
+                });
+
+            return ohlcvs.Select(o => _predictionEnginePool.Predict(o)).AsReadOnly();
         }
     }
 }

@@ -26,11 +26,11 @@ namespace Xtreem.Crusader.Client.Services
 
             async Task LoadHistoricalDataForGap(DateTime gapFrom, DateTime gapTo)
             {
-                newOhlcvs.AddRange(await _cryptoCompareService.LoadHistoricalDataAsync(new CurrencyPairChartPeriod {CurrencyPairChart = currencyPairChartPeriod.CurrencyPairChart, From = gapFrom, To = gapTo}, cancellationToken));
+                newOhlcvs.AddRange(await _cryptoCompareService.LoadHistoricalDataAsync(new CurrencyPairChartPeriod {CurrencyPairChart = currencyPairChartPeriod.CurrencyPairChart, DateTimeInterval = new DateTimeInterval {From = gapFrom, To = gapTo}}, cancellationToken));
             }
 
             var ohlcvs = _marketDataReadWriteRepository.GetOhlcvs(currencyPairChartPeriod).ToArray();
-            var currentFrom = currencyPairChartPeriod.From;
+            var currentFrom = currencyPairChartPeriod.DateTimeInterval.From;
             var interval = currencyPairChartPeriod.CurrencyPairChart.Resolution.Interval;
 
             // Find all gaps in the stored OHLCV data and fill these by loading them from CryptoCompare.
@@ -46,9 +46,9 @@ namespace Xtreem.Crusader.Client.Services
             }
 
             // Ensure any trailing gap is covered.
-            if (currentFrom != currencyPairChartPeriod.To)
+            if (currentFrom != currencyPairChartPeriod.DateTimeInterval.To)
             {
-                await LoadHistoricalDataForGap(currentFrom, currencyPairChartPeriod.To);
+                await LoadHistoricalDataForGap(currentFrom, currencyPairChartPeriod.DateTimeInterval.To);
             }
 
             return ohlcvs.Concat(newOhlcvs);

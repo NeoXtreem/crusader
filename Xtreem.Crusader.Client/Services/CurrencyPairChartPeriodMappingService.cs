@@ -13,10 +13,11 @@ namespace Xtreem.Crusader.Client.Services
         {
             Mapper = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<CurrencyPairChartPeriod, CurrencyPairChartPeriodViewModel>().IncludeMembers(s => s.CurrencyPairChart).ReverseMap()
+                cfg.CreateMap<CurrencyPairChartPeriod, CurrencyPairChartPeriodViewModel>().IncludeMembers(s => s.CurrencyPairChart, s => s.DateTimeInterval).ReverseMap()
                     .ForPath(d => d.CurrencyPairChart.Resolution, o => o.MapFrom(s => Resolution.Parse(s.Resolution)));
                 cfg.CreateMap<CurrencyPairChart, CurrencyPairChartPeriodViewModel>(MemberList.None).ReverseMap()
                     .ForMember(d => d.Resolution, o => o.Ignore());
+                cfg.CreateMap<DateTimeInterval, CurrencyPairChartPeriodViewModel>(MemberList.None).ReverseMap();
             }).CreateMapper();
         }
     }

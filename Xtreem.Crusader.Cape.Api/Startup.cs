@@ -31,7 +31,10 @@ namespace Xtreem.Crusader.Cape.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            // ReSharper disable once CommentTypo
+            //TODO: Call AddNewtonsoftJson for Resolution type to deserialize as it has a readonly property as per https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#jsonnet-support. Revert if https://github.com/dotnet/corefx/issues/40602 is resolved.
+            services.AddControllers()
+                .AddNewtonsoftJson();
 
             services.AddScoped<IMarketDataContext, MarketDataContext>();
             services.AddScoped<IPredictionService, PredictionService>();

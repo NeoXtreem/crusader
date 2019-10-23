@@ -11,7 +11,7 @@ function getLanguageFromUrl() {
 export class TVChartContainer extends React.PureComponent {
   static defaultProps = {
     symbol: 'BTC',
-    interval: 'M',
+    interval: '1',
     containerId: 'tv_chart_container',
     datafeedUrl: 'udffeed',
     libraryPath: '/charting_library/',

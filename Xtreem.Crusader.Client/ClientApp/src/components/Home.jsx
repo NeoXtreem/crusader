@@ -37,13 +37,31 @@ export class Home extends Component {
 
   predict() {
     if (this.state.baseCurrency !== '' && this.state.quoteCurrency !== '') {
+      const now = new Date();
+      const year = now.getFullYear();
+      const months = now.getMonth() + 1;
+      const date = now.getDate();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const fromDate = year + '-' + months + '-' + (date - 1);
+      const toDate = year + '-' + months + '-' + (hours < 23 ? date : date + 1);
+      const from = fromDate + ' ' + hours + ':' + minutes + ':' + seconds;
+      const to = toDate + ' ' + (hours < 23 ? hours + 1 : 0) + ':' + minutes + ':' + seconds;
+
       window.fetch(`crusader/predict`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ CurrencyPairBaseCurrency: this.state.baseCurrency, CurrencyPairQuoteCurrency: this.state.quoteCurrency })
+          body: JSON.stringify({
+            CurrencyPairBaseCurrency: this.state.baseCurrency,
+            CurrencyPairQuoteCurrency: this.state.quoteCurrency,
+            Resolution: this.tvChart.current.props.interval,
+            From: from,
+            To: to
+          })
         })
         .then(this.handleErrors)
         .then(response => response.json())

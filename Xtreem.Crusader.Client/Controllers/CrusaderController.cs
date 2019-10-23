@@ -1,11 +1,12 @@
-using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Xtreem.Crusader.Client.Exceptions;
 using Xtreem.Crusader.Client.Services.Interfaces;
 using Xtreem.Crusader.Client.ViewModels;
-using Xtreem.Crusader.Data.Types;
+using Xtreem.Crusader.Data.Models;
 
 namespace Xtreem.Crusader.Client.Controllers
 {
@@ -26,18 +27,19 @@ namespace Xtreem.Crusader.Client.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<float?>> Predict(CurrencyPairChartPeriodViewModel currencyPairChartPeriod)
+        public async Task<ActionResult<ReadOnlyCollection<Ohlcv>>> Predict(CurrencyPairChartPeriodViewModel currencyPairChartPeriod)
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
 
-            currencyPairChartPeriod.Resolution = Resolution.Minute.ToString();
-            currencyPairChartPeriod.From = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1000));
-            currencyPairChartPeriod.To = DateTime.UtcNow;
-
-            var close = await _mlService.PredictAsync(_currencyPairChartPeriodMappingService.Map(currencyPairChartPeriod), _cts.Token);
-
-            return Ok(close);
+            try
+            {
+                return Ok(await _mlService.PredictAsync(_currencyPairChartPeriodMappingService.Map(currencyPairChartPeriod), _cts.Token));
+            }
+            catch (HistoricalDataException e)
+            {
+                return BadRequest(e.Response);
+            }
         }
     }
 }

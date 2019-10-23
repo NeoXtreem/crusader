@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Xtreem.Crusader.Cape.Api.Services.Interfaces;
 using Xtreem.Crusader.Data.Models;
-using Xtreem.Crusader.ML.Data.Services.Interfaces;
+using Xtreem.Crusader.ML.Data.Models;
 
 namespace Xtreem.Crusader.Cape.Api.Controllers
 {
@@ -12,26 +13,17 @@ namespace Xtreem.Crusader.Cape.Api.Controllers
     {
         private readonly ILogger<CapeController> _logger;
         private readonly IPredictionService _predictionService;
-        private readonly IOhlcvMappingService _ohlcvMappingService;
 
-        public CapeController(ILogger<CapeController> logger, IPredictionService predictionService, IOhlcvMappingService ohlcvMappingService)
+        public CapeController(ILogger<CapeController> logger, IPredictionService predictionService)
         {
             _logger = logger;
             _predictionService = predictionService;
-            _ohlcvMappingService = ohlcvMappingService;
         }
 
         [HttpPost]
-        public ActionResult<float> Post(Ohlcv ohlcv)
+        public ActionResult<ReadOnlyCollection<OhlcvPrediction>> Post(CurrencyPairChartPeriod predictionPeriod)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            var ohlcvPrediction = _predictionService.Predict(_ohlcvMappingService.Map(ohlcv));
-
-            return Ok(ohlcvPrediction.ClosePrediction);
+            return Ok(_predictionService.Predict(predictionPeriod));
         }
     }
 }
