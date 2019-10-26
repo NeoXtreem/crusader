@@ -1,11 +1,8 @@
-﻿using System.Net.Mime;
+﻿using System.Collections.ObjectModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Xtreem.Crusader.Data.Models;
-using Xtreem.Crusader.Data.Repositories.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
-using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.ML.Data.Services.Interfaces;
 
 namespace Xtreem.Crusader.ML.Api.Controllers
 {
@@ -14,31 +11,18 @@ namespace Xtreem.Crusader.ML.Api.Controllers
     public class MLController : ControllerBase
     {
         private readonly ILogger<MLController> _logger;
-        private readonly IModelService _modelService;
-        private readonly IOhlcvMappingService _ohlcvMappingService;
-        private readonly IMarketDataReadRepository _marketDataReadRepository;
+        private readonly IPredictionService _predictionService;
 
-        public MLController(ILogger<MLController> logger, IModelService modelService, IOhlcvMappingService ohlcvMappingService, IMarketDataReadRepository marketDataReadRepository)
+        public MLController(ILogger<MLController> logger, IPredictionService predictionService)
         {
             _logger = logger;
-            _modelService = modelService;
-            _ohlcvMappingService = ohlcvMappingService;
-            _marketDataReadRepository = marketDataReadRepository;
+            _predictionService = predictionService;
         }
 
         [HttpPost]
-        public ActionResult Post(CurrencyPairChartPeriod currencyPairChartPeriod)
+        public ActionResult<ReadOnlyCollection<Ohlcv>> Post(CurrencyPairChartPeriod currencyPairChartPeriod)
         {
-            _modelService.Initialise(_ohlcvMappingService.Map(_marketDataReadRepository.GetOhlcvs(currencyPairChartPeriod)));
-            _modelService.Train<OhlcvInput>();
-
-            return Ok();
-        }
-
-        [HttpGet("[action]")]
-        public ActionResult Model()
-        {
-            return File(_modelService.GetModel(), MediaTypeNames.Application.Zip);
+            return Ok(_predictionService.Predict(currencyPairChartPeriod));
         }
     }
 }

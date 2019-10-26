@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Xtreem.Crusader.Client.Exceptions;
 using Xtreem.Crusader.Client.Services.Interfaces;
 using Xtreem.Crusader.Client.ViewModels;
 using Xtreem.Crusader.Data.Models;
@@ -32,14 +31,7 @@ namespace Xtreem.Crusader.Client.Controllers
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
 
-            try
-            {
-                return Ok(await _mlService.PredictAsync(_currencyPairChartPeriodMappingService.Map(currencyPairChartPeriod), _cts.Token));
-            }
-            catch (HistoricalDataException e)
-            {
-                return BadRequest(e.Response);
-            }
+            return Ok(await _mlService.PredictAsync(_currencyPairChartPeriodMappingService.Map(currencyPairChartPeriod), _cts.Token));
         }
     }
 }

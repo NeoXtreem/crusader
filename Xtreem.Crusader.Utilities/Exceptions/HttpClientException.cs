@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace Xtreem.Crusader.Client.Exceptions
+namespace Xtreem.Crusader.Utilities.Exceptions
 {
     public class HttpClientException : Exception
     {

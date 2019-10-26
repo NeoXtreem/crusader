@@ -1,4 +1,4 @@
-﻿namespace Xtreem.Crusader.Client.Models
+﻿namespace Xtreem.Crusader.ML.Api.Models
 {
     public class ConversionType
     {

@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Xtreem.Crusader.Data\Xtreem.Crusader.Data.csproj" />
+    <ProjectReference Include="..\Xtreem.Crusader.Utilities\Xtreem.Crusader.Utilities.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

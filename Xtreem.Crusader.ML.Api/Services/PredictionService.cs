@@ -2,12 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Extensions.ML;
-using Xtreem.Crusader.Cape.Api.Services.Interfaces;
 using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.Utilities;
+using Xtreem.Crusader.Utilities.Extensions;
 
-namespace Xtreem.Crusader.Cape.Api.Services
+namespace Xtreem.Crusader.ML.Api.Services
 {
     public class PredictionService : IPredictionService
     {

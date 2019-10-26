@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.ML.Api.Converters;
 
-namespace Xtreem.Crusader.Client.Models
+namespace Xtreem.Crusader.ML.Api.Models
 {
     public class HistoricalDataResponse
     {
@@ -33,7 +34,7 @@ namespace Xtreem.Crusader.Client.Models
         [JsonProperty(Required = Required.DisallowNull)]
         public int TimeTo { get; set; }
 
-        [JsonProperty(Required = Required.AllowNull)]
+        [JsonProperty(Required = Required.AllowNull), JsonConverter(typeof(EmptyObjectOrArrayJsonConverter<Ohlcv>))]
         public ICollection<Ohlcv> Data { get; set; }
 
         [JsonProperty(Required = Required.DisallowNull)]

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Xtreem.Crusader.Client.Repositories.Interfaces;
-using Xtreem.Crusader.Client.Services.Interfaces;
 using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
+using Xtreem.Crusader.ML.Api.Services.Interfaces;
 
-namespace Xtreem.Crusader.Client.Services
+namespace Xtreem.Crusader.ML.Api.Services
 {
     public class HistoricalDataService : IHistoricalDataService
     {

@@ -17,21 +17,12 @@ namespace Xtreem.Crusader.ML.Api.Services
     {
         private readonly ModelSettings _modelSettings;
 
-        private MLContext _mlContext;
-        private DataOperationsCatalog.TrainTestData _trainTestData;
-
         public ModelService(IOptions<ModelSettings> modelOptions)
         {
             _modelSettings = modelOptions.Value;
         }
 
-        public void Initialise(IEnumerable<OhlcvInput> ohlcvs)
-        {
-            _mlContext = new MLContext(0);
-            _trainTestData = _mlContext.Data.TrainTestSplit(_mlContext.Data.LoadFromEnumerable(ohlcvs));
-        }
-
-        public void Train<TOutput>() where TOutput : class
+        public ITransformer Train<TOutput>(IEnumerable<OhlcvInput> ohlcvs) where TOutput : class
         {
             var properties = typeof(TOutput).GetProperties().Select(p => (property: p, attributes: p.GetCustomAttributes())).Where(p => !p.attributes.OfType<ColumnNameAttribute>().Any()).ToArray();
             var propertyNames = properties.Select(p => p.property.Name).ToArray();
@@ -43,14 +34,15 @@ namespace Xtreem.Crusader.ML.Api.Services
                 return properties.Select(p => (p.property, attribute: p.attributes.OfType<TAttribute>().SingleOrDefault())).Where(p => p.attribute != null);
             }
 
+            var mlContext = new MLContext(0);
             IEstimator<ITransformer> pipeline = null;
 
             // If there are label columns specified, build a model for each one.
             foreach (var (property, attribute) in labelColumnProperties)
             {
                 IEstimator<ITransformer> estimator = CreateEstimators(property.Name)
-                    .Aggregate((IEstimator<ITransformer>)_mlContext.Transforms.CopyColumns("Label", property.Name), (c, e) => c.Append(e))
-                    .Append(_mlContext.Transforms.CopyColumns(attribute.ScoreColumnName, "Score"));
+                    .Aggregate((IEstimator<ITransformer>)mlContext.Transforms.CopyColumns("Label", property.Name), (c, e) => c.Append(e))
+                    .Append(mlContext.Transforms.CopyColumns(attribute.ScoreColumnName, "Score"));
 
                 // Appends to the pipeline only after the first iteration.
                 pipeline = pipeline?.Append(estimator) ?? estimator;
@@ -74,24 +66,25 @@ namespace Xtreem.Crusader.ML.Api.Services
 
                 return new IEstimator<ITransformer>[]
                 {
-                    _mlContext.Transforms.Categorical.OneHotEncoding(encodedColumnPairs),
-                    _mlContext.Transforms.Concatenate("Features", featureColumns),
-                    _mlContext.Regression.Trainers.FastTree()
+                    mlContext.Transforms.Categorical.OneHotEncoding(encodedColumnPairs),
+                    mlContext.Transforms.Concatenate("Features", featureColumns),
+                    mlContext.Regression.Trainers.FastTree()
                 };
             }
 
-            var model = pipeline.Fit(_trainTestData.TrainSet);
-            _mlContext.Model.Save(model, _trainTestData.TrainSet.Schema, _modelSettings.FilePath);
+            var trainTestData = mlContext.Data.TrainTestSplit(mlContext.Data.LoadFromEnumerable(ohlcvs));
+            var model = pipeline.Fit(trainTestData.TrainSet);
+            mlContext.Model.Save(model, trainTestData.TrainSet.Schema, _modelSettings.FilePath);
 
-            var metrics = _mlContext.Regression.Evaluate(model.Transform(_trainTestData.TestSet));
+            var metrics = mlContext.Regression.Evaluate(model.Transform(trainTestData.TestSet));
 
             Console.WriteLine();
             Console.WriteLine("Model quality metrics evaluation");
             Console.WriteLine(new string('-', 25));
             Console.WriteLine($" RSquared Score: {metrics.RSquared:0.##}");
             Console.WriteLine($" Root Mean Squared Error: {metrics.RootMeanSquaredError:0.##}");
-        }
 
-        public FileStream GetModel() => File.Open(_modelSettings.FilePath, FileMode.Open);
+            return model;
+        }
     }
 }

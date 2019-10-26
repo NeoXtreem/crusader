@@ -31,16 +31,12 @@ namespace Xtreem.Crusader.Client
                 .AddNewtonsoftJson();
 
             services.AddScoped<IMLService, MLService>();
-            services.AddScoped<IHistoricalDataService, HistoricalDataService>();
-            services.AddScoped<ICryptoCompareService, CryptoCompareService>();
             services.AddScoped<IMarketDataContext, MarketDataContext>();
-            services.AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>();
             services.AddScoped<IMarketDataReadViewRepository, MarketDataReadViewRepository>();
             services.AddTransient<ICurrencyPairChartPeriodMappingService, CurrencyPairChartPeriodMappingService>();
 
             services.Configure<DataSettings>(Configuration.GetSection("Data"));
             services.Configure<CrusaderApiSettings>(Configuration.GetSection("CrusaderApi"));
-            services.Configure<CryptoCompareSettings>(Configuration.GetSection("CryptoCompare"));
 
             // In production, the React files will be served from this directory.
             services.AddSpaStaticFiles(configuration =>

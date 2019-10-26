@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Xtreem.Crusader.Client.Settings
+namespace Xtreem.Crusader.ML.Api.Settings
 {
     public class CryptoCompareSettings
     {

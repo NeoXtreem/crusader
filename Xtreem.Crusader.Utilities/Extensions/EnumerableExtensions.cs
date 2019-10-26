@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Xtreem.Crusader.Utilities
+namespace Xtreem.Crusader.Utilities.Extensions
 {
     public static class EnumerableExtensions
     {

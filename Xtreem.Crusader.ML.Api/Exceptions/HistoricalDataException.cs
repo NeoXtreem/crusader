@@ -1,7 +1,7 @@
 ﻿using System;
-using Xtreem.Crusader.Client.Models;
+using Xtreem.Crusader.ML.Api.Models;
 
-namespace Xtreem.Crusader.Client.Exceptions
+namespace Xtreem.Crusader.ML.Api.Exceptions
 {
     internal class HistoricalDataException : Exception
     {

@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Xtreem.Crusader.Client.Exceptions;
-using Xtreem.Crusader.Client.Models;
-using Xtreem.Crusader.Client.Repositories.Interfaces;
-using Xtreem.Crusader.Client.Services.Interfaces;
-using Xtreem.Crusader.Client.Settings;
 using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.ML.Api.Exceptions;
+using Xtreem.Crusader.ML.Api.Models;
+using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
+using Xtreem.Crusader.ML.Api.Services.Interfaces;
+using Xtreem.Crusader.ML.Api.Settings;
+using Xtreem.Crusader.Utilities.Exceptions;
 
-namespace Xtreem.Crusader.Client.Services
+namespace Xtreem.Crusader.ML.Api.Services
 {
     public class CryptoCompareService : ICryptoCompareService
     {
@@ -48,8 +49,8 @@ namespace Xtreem.Crusader.Client.Services
                 using var client = new HttpClient {BaseAddress = new Uri(_settings.BaseUrl)};
 
                 // Calculate the limit to pass based on the size of the current batch.
-                var limit = (batchTo - from > maxLimit * resolution.Interval ? maxLimit : resolution.IntervalsInPeriod(batchTo - from)) - 1;
-                if (limit < 0) continue;
+                var limit = Math.Min(resolution.IntervalsInPeriod(batchTo - from), maxLimit);
+                if (limit < 1) continue;
 
                 using var response = await client.GetAsync(QueryHelpers.AddQueryString($"histo{resolution.ToString().ToLowerInvariant()}",
                     new (string key, string value)[]
