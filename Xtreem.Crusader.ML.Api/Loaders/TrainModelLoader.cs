@@ -5,8 +5,8 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.ML;
 using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Types;
+using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
-using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.ML.Data.Services.Interfaces;
 
 namespace Xtreem.Crusader.ML.Api.Loaders
@@ -30,7 +30,7 @@ namespace Xtreem.Crusader.ML.Api.Loaders
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
 
-            return _modelService.Train<OhlcvInput>(_ohlcvMappingService.Map(_historicalDataService.GetHistoricalDataAsync(new CurrencyPairChartPeriod
+            return _modelService.Train(_ohlcvMappingService.Map(_historicalDataService.GetHistoricalDataAsync(new CurrencyPairChartPeriod
             {
                 CurrencyPairChart = new CurrencyPairChart
                 {

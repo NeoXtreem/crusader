@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Microsoft.ML.Data;
+using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Attributes;
-using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.ML.Data.Settings;
 
 namespace Xtreem.Crusader.ML.Api.Services
 {
-    public class ModelService : IModelService
+    public class RegressionModelService : ModelService, IRegressionModelService
     {
-        private readonly ModelSettings _modelSettings;
-
-        public ModelService(IOptions<ModelSettings> modelOptions)
+        public RegressionModelService(IOptions<ModelSettings> modelOptions) : base(modelOptions)
         {
-            _modelSettings = modelOptions.Value;
         }
 
-        public ITransformer Train<TOutput>(IEnumerable<OhlcvInput> ohlcvs) where TOutput : class
+        protected override IEstimator<ITransformer> BuildPipeline<TOutput>(MLContext mlContext)
         {
             var properties = typeof(TOutput).GetProperties().Select(p => (property: p, attributes: p.GetCustomAttributes())).Where(p => !p.attributes.OfType<ColumnNameAttribute>().Any()).ToArray();
             var propertyNames = properties.Select(p => p.property.Name).ToArray();
@@ -34,7 +30,6 @@ namespace Xtreem.Crusader.ML.Api.Services
                 return properties.Select(p => (p.property, attribute: p.attributes.OfType<TAttribute>().SingleOrDefault())).Where(p => p.attribute != null);
             }
 
-            var mlContext = new MLContext(0);
             IEstimator<ITransformer> pipeline = null;
 
             // If there are label columns specified, build a model for each one.
@@ -72,19 +67,7 @@ namespace Xtreem.Crusader.ML.Api.Services
                 };
             }
 
-            var trainTestData = mlContext.Data.TrainTestSplit(mlContext.Data.LoadFromEnumerable(ohlcvs));
-            var model = pipeline.Fit(trainTestData.TrainSet);
-            mlContext.Model.Save(model, trainTestData.TrainSet.Schema, _modelSettings.FilePath);
-
-            var metrics = mlContext.Regression.Evaluate(model.Transform(trainTestData.TestSet));
-
-            Console.WriteLine();
-            Console.WriteLine("Model quality metrics evaluation");
-            Console.WriteLine(new string('-', 25));
-            Console.WriteLine($" RSquared Score: {metrics.RSquared:0.##}");
-            Console.WriteLine($" Root Mean Squared Error: {metrics.RootMeanSquaredError:0.##}");
-
-            return model;
+            return pipeline;
         }
     }
 }

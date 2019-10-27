@@ -14,6 +14,7 @@ using Xtreem.Crusader.ML.Api.Loaders;
 using Xtreem.Crusader.ML.Api.Repositories;
 using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
 using Xtreem.Crusader.ML.Api.Services;
+using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Api.Settings;
 using Xtreem.Crusader.ML.Data.Models;
@@ -48,7 +49,7 @@ namespace Xtreem.Crusader.ML.Api
                 .AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>()
                 .AddScoped<IHistoricalDataService, HistoricalDataService>()
                 .AddScoped<ICryptoCompareService, CryptoCompareService>()
-                .AddScoped<IModelService, ModelService>()
+                .AddScoped<IRegressionModelService, RegressionModelService>()
                 .AddTransient<IOhlcvMappingService, OhlcvMappingService>()
                 .Configure<ModelSettings>(Configuration.GetSection("Model"))
                 .Configure<DataSettings>(Configuration.GetSection("Data"))
