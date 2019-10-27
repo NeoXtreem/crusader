@@ -20,23 +20,23 @@ namespace Xtreem.Crusader.Client
     {
         public Startup(IConfiguration configuration) => Configuration = configuration;
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // ReSharper disable once CommentTypo
             //TODO: Call AddNewtonsoftJson to resolve undesired behaviour on TradingView as per https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#jsonnet-support. Periodically check if resolved.
-            services.AddControllersWithViews()
+            services
+                .AddControllersWithViews()
                 .AddNewtonsoftJson();
 
-            services.AddScoped<IMLService, MLService>();
-            services.AddScoped<IMarketDataContext, MarketDataContext>();
-            services.AddScoped<IMarketDataReadViewRepository, MarketDataReadViewRepository>();
-            services.AddTransient<ICurrencyPairChartPeriodMappingService, CurrencyPairChartPeriodMappingService>();
-
-            services.Configure<DataSettings>(Configuration.GetSection("Data"));
-            services.Configure<CrusaderApiSettings>(Configuration.GetSection("CrusaderApi"));
+            services.AddScoped<IMLService, MLService>()
+                .AddScoped<IMarketDataContext, MarketDataContext>()
+                .AddScoped<IMarketDataReadViewRepository, MarketDataReadViewRepository>()
+                .AddTransient<ICurrencyPairChartPeriodMappingService, CurrencyPairChartPeriodMappingService>()
+                .Configure<DataSettings>(Configuration.GetSection("Data"))
+                .Configure<CrusaderApiSettings>(Configuration.GetSection("CrusaderApi"));
 
             // In production, the React files will be served from this directory.
             services.AddSpaStaticFiles(configuration =>

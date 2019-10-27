@@ -13,6 +13,8 @@ namespace Xtreem.Crusader.Data.Repositories
 
         public MarketDataReadRepository(IMarketDataContext context) => _context = context;
 
+        public IEnumerable<Ohlcv> GetOhlcvs() => _context.GetHistoricalOhlcvsQuery().AsEnumerable();
+
         public IEnumerable<Ohlcv> GetOhlcvs(CurrencyPairChart currencyPairChart, long from, long to)
         {
             var currencyPair = currencyPairChart.CurrencyPair;

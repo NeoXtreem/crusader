@@ -30,29 +30,29 @@ namespace Xtreem.Crusader.ML.Api
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // ReSharper disable once CommentTypo
             //TODO: Call AddNewtonsoftJson for Resolution type to deserialize as it has a readonly property as per https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#jsonnet-support. Revert if https://github.com/dotnet/corefx/issues/40602 is resolved.
-            services.AddControllers()
+            services
+                .AddControllers()
                 .AddNewtonsoftJson();
 
-            services.AddScoped<IPredictionService, PredictionService>();
-            services.AddScoped<IMarketDataContext, MarketDataContext>();
-            services.AddScoped<IMarketDataReadRepository, MarketDataReadRepository>();
-            services.AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>();
-            services.AddScoped<IHistoricalDataService, HistoricalDataService>();
-            services.AddScoped<ICryptoCompareService, CryptoCompareService>();
-            services.AddScoped<IModelService, ModelService>();
-
-            services.AddTransient<IOhlcvMappingService, OhlcvMappingService>();
-
-            services.Configure<ModelSettings>(Configuration.GetSection("Model"));
-            services.Configure<DataSettings>(Configuration.GetSection("Data"));
-            services.Configure<CryptoCompareSettings>(Configuration.GetSection("CryptoCompare"));
+            services
+                .AddScoped<IPredictionService, PredictionService>()
+                .AddScoped<IMarketDataContext, MarketDataContext>()
+                .AddScoped<IMarketDataReadRepository, MarketDataReadRepository>()
+                .AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>()
+                .AddScoped<IHistoricalDataService, HistoricalDataService>()
+                .AddScoped<ICryptoCompareService, CryptoCompareService>()
+                .AddScoped<IModelService, ModelService>()
+                .AddTransient<IOhlcvMappingService, OhlcvMappingService>()
+                .Configure<ModelSettings>(Configuration.GetSection("Model"))
+                .Configure<DataSettings>(Configuration.GetSection("Data"))
+                .Configure<CryptoCompareSettings>(Configuration.GetSection("CryptoCompare"));
 
             //TODO: Uncomment the delegate in the following statement, and remove the next statement once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
             services.AddPredictionEnginePool<OhlcvInput, OhlcvPrediction>( /*serviceProvider =>
