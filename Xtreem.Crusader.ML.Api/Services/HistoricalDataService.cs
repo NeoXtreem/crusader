@@ -9,7 +9,7 @@ using Xtreem.Crusader.ML.Api.Services.Interfaces;
 
 namespace Xtreem.Crusader.ML.Api.Services
 {
-    public class HistoricalDataService : IHistoricalDataService
+    internal class HistoricalDataService : IHistoricalDataService
     {
         private readonly IMarketDataReadWriteRepository _marketDataReadWriteRepository;
         private readonly ICryptoCompareService _cryptoCompareService;

@@ -12,7 +12,7 @@ using Xtreem.Crusader.ML.Data.Settings;
 
 namespace Xtreem.Crusader.ML.Api.Services
 {
-    public class RegressionModelService : ModelService, IRegressionModelService
+    internal class RegressionModelService : ModelService, IRegressionModelService
     {
         public RegressionModelService(IOptions<ModelSettings> modelOptions) : base(modelOptions)
         {

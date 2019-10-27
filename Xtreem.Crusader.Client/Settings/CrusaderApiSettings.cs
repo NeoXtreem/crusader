@@ -2,7 +2,7 @@
 
 namespace Xtreem.Crusader.Client.Settings
 {
-    public class CrusaderApiSettings
+    internal class CrusaderApiSettings
     {
         [UsedImplicitly]
         public string CapeApiBaseUrl { get; set; }

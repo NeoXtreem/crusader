@@ -9,7 +9,7 @@ using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.ML.Api.Services
 {
-    public class PredictionService : IPredictionService
+    internal class PredictionService : IPredictionService
     {
         private readonly PredictionEnginePool<OhlcvInput, OhlcvPrediction> _predictionEnginePool;
 

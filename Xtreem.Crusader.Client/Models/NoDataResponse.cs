@@ -2,7 +2,7 @@
 
 namespace Xtreem.Crusader.Client.Models
 {
-    public class NoDataResponse : StatusResponse
+    internal class NoDataResponse : StatusResponse
     {
         public NoDataResponse() => S = "no_data";
 

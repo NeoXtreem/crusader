@@ -5,7 +5,7 @@ using Xtreem.Crusader.Data.Models;
 
 namespace Xtreem.Crusader.ML.Api.Services.Interfaces
 {
-    public interface IHistoricalDataService
+    internal interface IHistoricalDataService
     {
         Task<IEnumerable<Ohlcv>> GetHistoricalDataAsync(CurrencyPairChartPeriod currencyPairChartPeriod, CancellationToken cancellationToken);
     }

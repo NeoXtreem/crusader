@@ -7,7 +7,7 @@ using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
 
 namespace Xtreem.Crusader.ML.Api.Repositories
 {
-    public class MarketDataReadWriteRepository : MarketDataReadRepository, IMarketDataReadWriteRepository
+    internal class MarketDataReadWriteRepository : MarketDataReadRepository, IMarketDataReadWriteRepository
     {
         private readonly IMarketDataContext _context;
 

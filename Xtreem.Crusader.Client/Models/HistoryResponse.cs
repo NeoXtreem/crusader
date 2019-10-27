@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Xtreem.Crusader.Client.Models
 {
-    public class HistoryResponse : StatusResponse
+    internal class HistoryResponse : StatusResponse
     {
         [JsonProperty("t", Required = Required.DisallowNull), Required]
         public ICollection<long> T { get; set; }

@@ -7,7 +7,7 @@ using Xtreem.Crusader.Data.Types;
 
 namespace Xtreem.Crusader.Client.Services
 {
-    public class CurrencyPairChartPeriodMappingService : MappingService<CurrencyPairChartPeriodViewModel, CurrencyPairChartPeriod>, ICurrencyPairChartPeriodMappingService
+    internal class CurrencyPairChartPeriodMappingService : MappingService<CurrencyPairChartPeriodViewModel, CurrencyPairChartPeriod>, ICurrencyPairChartPeriodMappingService
     {
         public CurrencyPairChartPeriodMappingService()
         {

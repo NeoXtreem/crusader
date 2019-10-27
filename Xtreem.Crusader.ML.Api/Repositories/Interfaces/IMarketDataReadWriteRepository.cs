@@ -5,7 +5,7 @@ using Xtreem.Crusader.Data.Repositories.Interfaces;
 
 namespace Xtreem.Crusader.ML.Api.Repositories.Interfaces
 {
-    public interface IMarketDataReadWriteRepository : IMarketDataReadRepository
+    internal interface IMarketDataReadWriteRepository : IMarketDataReadRepository
     {
         Task AddOhlcvsAsync(IEnumerable<Ohlcv> items);
     }

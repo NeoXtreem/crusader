@@ -17,7 +17,7 @@ using Xtreem.Crusader.Utilities.Exceptions;
 
 namespace Xtreem.Crusader.ML.Api.Services
 {
-    public class CryptoCompareService : ICryptoCompareService
+    internal class CryptoCompareService : ICryptoCompareService
     {
         private readonly CryptoCompareSettings _settings;
         private readonly IMarketDataReadWriteRepository _marketDataReadWriteRepository;

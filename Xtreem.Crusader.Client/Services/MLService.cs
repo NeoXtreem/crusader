@@ -11,7 +11,7 @@ using Xtreem.Crusader.Utilities.Exceptions;
 
 namespace Xtreem.Crusader.Client.Services
 {
-    public class MLService : IMLService
+    internal class MLService : IMLService
     {
         private readonly CrusaderApiSettings _settings;
 

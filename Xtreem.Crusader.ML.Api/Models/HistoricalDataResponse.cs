@@ -5,7 +5,7 @@ using Xtreem.Crusader.ML.Api.Converters;
 
 namespace Xtreem.Crusader.ML.Api.Models
 {
-    public class HistoricalDataResponse
+    internal class HistoricalDataResponse
     {
         [JsonProperty(Required = Required.DisallowNull)]
         public string Response { get; set; }

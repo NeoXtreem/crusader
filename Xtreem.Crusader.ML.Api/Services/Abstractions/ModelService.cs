@@ -7,7 +7,7 @@ using Xtreem.Crusader.ML.Data.Settings;
 
 namespace Xtreem.Crusader.ML.Api.Services.Abstractions
 {
-    public abstract class ModelService : IModelService
+    internal abstract class ModelService : IModelService
     {
         private readonly ModelSettings _modelSettings;
 
