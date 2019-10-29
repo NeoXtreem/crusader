@@ -5,22 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
-using Xtreem.Crusader.Data.Contexts;
-using Xtreem.Crusader.Data.Contexts.Interfaces;
-using Xtreem.Crusader.Data.Repositories;
-using Xtreem.Crusader.Data.Repositories.Interfaces;
 using Xtreem.Crusader.Data.Settings;
 using Xtreem.Crusader.ML.Api.Loaders;
-using Xtreem.Crusader.ML.Api.Repositories;
-using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
-using Xtreem.Crusader.ML.Api.Services;
-using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
-using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Api.Settings;
 using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.ML.Data.Services;
-using Xtreem.Crusader.ML.Data.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Settings;
+using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.ML.Api
 {
@@ -43,33 +33,31 @@ namespace Xtreem.Crusader.ML.Api
                 .AddNewtonsoftJson();
 
             services
-                .AddScoped<IPredictionService, PredictionService>()
-                .AddScoped<IMarketDataContext, MarketDataContext>()
-                .AddScoped<IMarketDataReadRepository, MarketDataReadRepository>()
-                .AddScoped<IMarketDataReadWriteRepository, MarketDataReadWriteRepository>()
-                .AddScoped<IHistoricalDataService, HistoricalDataService>()
-                .AddScoped<ICryptoCompareService, CryptoCompareService>()
-                .AddScoped<IRegressionModelService, RegressionModelService>()
-                .AddTransient<IOhlcvMappingService, OhlcvMappingService>()
+                .ScanAssembly()
                 .Configure<ModelSettings>(Configuration.GetSection("Model"))
                 .Configure<DataSettings>(Configuration.GetSection("Data"))
                 .Configure<CryptoCompareSettings>(Configuration.GetSection("CryptoCompare"));
 
-            //TODO: Uncomment the delegate in the following statement, and remove the next statement once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
-            services.AddPredictionEnginePool<OhlcvInput, OhlcvPrediction>( /*serviceProvider =>
-            {
-                services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, OhlcvPrediction>>().Configure(options =>
-                {
-                    options.ModelLoader = new TrainModelLoader(serviceProvider.GetService<IModelService>(), serviceProvider.GetService<IOhlcvMappingService>(), serviceProvider.GetService<IHistoricalDataService>());
-                });
-                return new PredictionEnginePool<OhlcvInput, OhlcvPrediction>();
-            }*/);
+            AddPredictionEnginePool<OhlcvRegressionPrediction>();
+            AddPredictionEnginePool<OhlcvTimeSeriesPrediction>();
 
-            services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, OhlcvPrediction>>().Configure(options =>
+            void AddPredictionEnginePool<TPrediction>() where TPrediction : class, new()
             {
-                var serviceProvider = services.BuildServiceProvider();
-                options.ModelLoader = new TrainModelLoader(serviceProvider.GetService<IModelService>(), serviceProvider.GetService<IOhlcvMappingService>(), serviceProvider.GetService<IHistoricalDataService>());
-            });
+                //TODO: Uncomment the delegate in the following statement, and remove the next statement once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
+                services.AddPredictionEnginePool<OhlcvInput, TPrediction>( /*sp =>
+                {
+                    services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, TPrediction>>().Configure(options =>
+                    {
+                        options.ModelLoader = sp.GetService<TrainModelLoader>();
+                    });
+                    return new PredictionEnginePool<OhlcvInput, TPrediction>();
+                }*/);
+
+                services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, TPrediction>>().Configure(options =>
+                {
+                    options.ModelLoader = services.BuildServiceProvider().GetService<TrainModelLoader>();
+                });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

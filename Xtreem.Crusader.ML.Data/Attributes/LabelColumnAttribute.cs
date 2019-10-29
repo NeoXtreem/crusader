@@ -7,10 +7,6 @@ namespace Xtreem.Crusader.ML.Data.Attributes
     {
         public string ScoreColumnName { get; }
 
-        public LabelColumnAttribute()
-        {
-        }
-
         public LabelColumnAttribute(string scoreColumnName)
         {
             ScoreColumnName = scoreColumnName;

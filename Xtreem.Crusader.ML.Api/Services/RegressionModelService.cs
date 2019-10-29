@@ -2,23 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
-using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Attributes;
 using Xtreem.Crusader.ML.Data.Settings;
+using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.ML.Api.Services
 {
-    internal class RegressionModelService : ModelService, IRegressionModelService
+    [Inject, UsedImplicitly]
+    internal class RegressionModelService : ModelService
     {
         public RegressionModelService(IOptions<ModelSettings> modelOptions) : base(modelOptions)
         {
         }
 
-        protected override IEstimator<ITransformer> BuildPipeline<TOutput>(MLContext mlContext)
+        protected override ITransformer Train<TOutput>(MLContext mlContext, IEnumerable<TOutput> items)
         {
             var properties = typeof(TOutput).GetProperties().Select(p => (property: p, attributes: p.GetCustomAttributes())).Where(p => !p.attributes.OfType<ColumnNameAttribute>().Any()).ToArray();
             var propertyNames = properties.Select(p => p.property.Name).ToArray();
@@ -67,7 +69,20 @@ namespace Xtreem.Crusader.ML.Api.Services
                 };
             }
 
-            return pipeline;
+            var trainTestData = mlContext.Data.TrainTestSplit(mlContext.Data.LoadFromEnumerable(items));
+            var model = pipeline.Fit(trainTestData.TrainSet);
+
+            mlContext.Model.Save(model, trainTestData.TrainSet.Schema, ModelSettings.FilePath);
+
+            var metrics = mlContext.Regression.Evaluate(model.Transform(trainTestData.TestSet));
+
+            Console.WriteLine();
+            Console.WriteLine("Model quality metrics evaluation");
+            Console.WriteLine(new string('-', 25));
+            Console.WriteLine($" RSquared Score: {metrics.RSquared:0.##}");
+            Console.WriteLine($" Root Mean Squared Error: {metrics.RootMeanSquaredError:0.##}");
+
+            return model;
         }
     }
 }

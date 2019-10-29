@@ -5,6 +5,8 @@ namespace Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces
 {
     internal interface IModelService
     {
-        ITransformer Train<TOutput>(IEnumerable<TOutput> ohlcvs) where TOutput : class;
+        bool CanTrain();
+
+        ITransformer Train<TOutput>(IEnumerable<TOutput> items) where TOutput : class;
     }
 }

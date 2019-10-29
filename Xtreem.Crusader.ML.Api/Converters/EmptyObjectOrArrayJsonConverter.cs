@@ -6,19 +6,19 @@ using Newtonsoft.Json;
 
 namespace Xtreem.Crusader.ML.Api.Converters
 {
-    internal class EmptyObjectOrArrayJsonConverter<T> : JsonConverter<ICollection<T>> where T : class, new()
+    internal class EmptyObjectOrArrayJsonConverter<TValue> : JsonConverter<ICollection<TValue>>
     {
-        public override void WriteJson(JsonWriter writer, ICollection<T> value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, ICollection<TValue> value, JsonSerializer serializer)
         {
             serializer.Serialize(writer, value.Any() ? (object)value : new { });
         }
 
-        public override ICollection<T> ReadJson(JsonReader reader, Type objectType, ICollection<T> existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override ICollection<TValue> ReadJson(JsonReader reader, Type objectType, ICollection<TValue> existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             return reader.TokenType switch
             {
-                JsonToken.StartObject => new Collection<T>(),
-                JsonToken.StartArray => serializer.Deserialize<ICollection<T>>(reader),
+                JsonToken.StartObject => new Collection<TValue>(),
+                JsonToken.StartArray => serializer.Deserialize<ICollection<TValue>>(reader),
                 _ => throw new ArgumentOutOfRangeException($"Converter does not support JSON token type {reader.TokenType}.")
             };
         }

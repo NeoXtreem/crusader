@@ -1,15 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using AutoMapper;
 
 namespace Xtreem.Crusader.Data.Services.Abstractions.Interfaces
 {
-    public interface IMappingService<T1, T2> where T1 : class where T2 : class
+    public interface IMappingService
     {
-        T2 Map(T1 input);
-
-        T1 Map(T2 input);
-
-        IEnumerable<T2> Map(IEnumerable<T1> input);
-
-        IEnumerable<T1> Map(IEnumerable<T2> input);
+        IMapper GetMapper<TProfile>() where TProfile : Profile, new();
     }
 }

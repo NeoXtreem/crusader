@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -13,10 +14,12 @@ using Xtreem.Crusader.ML.Api.Models;
 using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Api.Settings;
+using Xtreem.Crusader.Utilities.Attributes;
 using Xtreem.Crusader.Utilities.Exceptions;
 
 namespace Xtreem.Crusader.ML.Api.Services
 {
+    [Inject, UsedImplicitly]
     internal class CryptoCompareService : ICryptoCompareService
     {
         private readonly CryptoCompareSettings _settings;

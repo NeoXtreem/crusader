@@ -15,4 +15,12 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Xtreem.Crusader.Utilities\Xtreem.Crusader.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="Xtreem.Crusader.Utilities.Attributes.InjectAttribute" />
+  </ItemGroup>
+
 </Project>

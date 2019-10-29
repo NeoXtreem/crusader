@@ -1,27 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
+using JetBrains.Annotations;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Primitives;
 using Microsoft.ML;
 using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.Data.Types;
+using Xtreem.Crusader.ML.Api.Profiles;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
-using Xtreem.Crusader.ML.Data.Services.Interfaces;
+using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.ML.Api.Loaders
 {
+    [Inject, UsedImplicitly]
     internal class TrainModelLoader : ModelLoader
     {
         private readonly IModelService _modelService;
-        private readonly IOhlcvMappingService _ohlcvMappingService;
+        private readonly IMappingService _mappingService;
         private readonly IHistoricalDataService _historicalDataService;
         private CancellationTokenSource _cts;
 
-        public TrainModelLoader(IModelService modelService, IOhlcvMappingService ohlcvMappingService, IHistoricalDataService historicalDataService)
+        public TrainModelLoader(IModelService modelService, IMappingService mappingService, IHistoricalDataService historicalDataService)
         {
             _modelService = modelService;
-            _ohlcvMappingService = ohlcvMappingService;
+            _mappingService = mappingService;
             _historicalDataService = historicalDataService;
         }
 
@@ -30,7 +36,7 @@ namespace Xtreem.Crusader.ML.Api.Loaders
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
 
-            return _modelService.Train(_ohlcvMappingService.Map(_historicalDataService.GetHistoricalDataAsync(new CurrencyPairChartPeriod
+            return _modelService.Train(_mappingService.GetMapper<OhlcvProfile>().Map<IEnumerable<OhlcvInput>>(_historicalDataService.GetHistoricalDataAsync(new CurrencyPairChartPeriod
             {
                 CurrencyPairChart = new CurrencyPairChart
                 {

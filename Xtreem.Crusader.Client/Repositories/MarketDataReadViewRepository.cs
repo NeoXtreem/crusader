@@ -1,11 +1,14 @@
 ﻿using System.Linq;
+using JetBrains.Annotations;
 using Xtreem.Crusader.Client.Repositories.Interfaces;
 using Xtreem.Crusader.Data.Contexts.Interfaces;
 using Xtreem.Crusader.Data.Repositories;
 using Xtreem.Crusader.Data.Types;
+using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.Client.Repositories
 {
+    [Inject, UsedImplicitly]
     internal class MarketDataReadViewRepository : MarketDataReadRepository, IMarketDataReadViewRepository
     {
         private readonly IMarketDataContext _context;

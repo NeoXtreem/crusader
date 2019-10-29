@@ -3,14 +3,17 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 using Xtreem.Crusader.Client.Services.Interfaces;
 using Xtreem.Crusader.Client.Settings;
 using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.Utilities.Attributes;
 using Xtreem.Crusader.Utilities.Exceptions;
 
 namespace Xtreem.Crusader.Client.Services
 {
+    [Inject, UsedImplicitly]
     internal class MLService : IMLService
     {
         private readonly CrusaderApiSettings _settings;

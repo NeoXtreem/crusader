@@ -1,27 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
+using JetBrains.Annotations;
+using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
+using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.Data.Services.Abstractions
 {
-    public abstract class MappingService<T1, T2> where T1 : class where T2 : class
+    [Inject, UsedImplicitly]
+    public class MappingService : IMappingService
     {
-        protected IMapper Mapper { get; set; }
+        private static readonly Dictionary<Type, IMapper> Mappers = new Dictionary<Type, IMapper>();
 
-        protected void InitialiseMapper()
+        public IMapper GetMapper<TProfile>() where TProfile : Profile, new()
         {
-            Mapper = new MapperConfiguration(cfg =>
+            if (!Mappers.TryGetValue(typeof(TProfile), out var mapper))
             {
-                cfg.CreateMap<T1, T2>().ReverseMap();
-            }).CreateMapper();
+                Mappers.Add(typeof(TProfile), mapper = new MapperConfiguration(cfg => { cfg.AddProfile<TProfile>(); }).CreateMapper());
+            }
+
+            return mapper;
         }
-
-        public T2 Map(T1 input) => Mapper.Map<T1, T2>(input);
-
-        public T1 Map(T2 input) => Mapper.Map<T2, T1>(input);
-
-        public IEnumerable<T2> Map(IEnumerable<T1> input) => input.Select(Map);
-
-        public IEnumerable<T1> Map(IEnumerable<T2> input) => input.Select(Map);
     }
 }

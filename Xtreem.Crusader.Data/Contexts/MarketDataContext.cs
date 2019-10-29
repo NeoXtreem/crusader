@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.Azure.CosmosDB.BulkExecutor;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -8,9 +9,11 @@ using Microsoft.Extensions.Options;
 using Xtreem.Crusader.Data.Contexts.Interfaces;
 using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Settings;
+using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.Data.Contexts
 {
+    [Inject, UsedImplicitly]
     public class MarketDataContext : IMarketDataContext, IDisposable
     {
         private readonly Uri _collectionUri;

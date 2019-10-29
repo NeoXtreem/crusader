@@ -5,14 +5,12 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Xtreem.Crusader.Client.Repositories;
-using Xtreem.Crusader.Client.Repositories.Interfaces;
-using Xtreem.Crusader.Client.Services;
-using Xtreem.Crusader.Client.Services.Interfaces;
+using Xtreem.Crusader.Client.Profiles;
 using Xtreem.Crusader.Client.Settings;
-using Xtreem.Crusader.Data.Contexts;
-using Xtreem.Crusader.Data.Contexts.Interfaces;
+using Xtreem.Crusader.Data.Services.Abstractions;
+using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.Data.Settings;
+using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.Client
 {
@@ -31,10 +29,8 @@ namespace Xtreem.Crusader.Client
                 .AddControllersWithViews()
                 .AddNewtonsoftJson();
 
-            services.AddScoped<IMLService, MLService>()
-                .AddScoped<IMarketDataContext, MarketDataContext>()
-                .AddScoped<IMarketDataReadViewRepository, MarketDataReadViewRepository>()
-                .AddTransient<ICurrencyPairChartPeriodMappingService, CurrencyPairChartPeriodMappingService>()
+            services
+                .ScanAssembly()
                 .Configure<DataSettings>(Configuration.GetSection("Data"))
                 .Configure<CrusaderApiSettings>(Configuration.GetSection("CrusaderApi"));
 

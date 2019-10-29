@@ -3,11 +3,9 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceStack.Text;
-using Xtreem.Crusader.Data.Contexts;
-using Xtreem.Crusader.Data.Contexts.Interfaces;
-using Xtreem.Crusader.Data.Repositories;
 using Xtreem.Crusader.Data.Repositories.Interfaces;
 using Xtreem.Crusader.Data.Settings;
+using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.Data.Exporter
 {
@@ -25,8 +23,7 @@ namespace Xtreem.Crusader.Data.Exporter
 
             // Set up DI.
             var serviceProvider = new ServiceCollection()
-                .AddScoped<IMarketDataContext, MarketDataContext>()
-                .AddScoped<IMarketDataReadRepository, MarketDataReadRepository>()
+                .ScanAssembly()
                 .Configure<DataSettings>(dataSettings)
                 .BuildServiceProvider();
 
