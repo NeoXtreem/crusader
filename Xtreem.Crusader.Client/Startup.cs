@@ -5,11 +5,8 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Xtreem.Crusader.Client.Profiles;
-using Xtreem.Crusader.Client.Settings;
-using Xtreem.Crusader.Data.Services.Abstractions;
-using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
-using Xtreem.Crusader.Data.Settings;
+using Xtreem.Crusader.Client.Models;
+using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.Client
@@ -31,8 +28,8 @@ namespace Xtreem.Crusader.Client
 
             services
                 .ScanAssembly()
-                .Configure<DataSettings>(Configuration.GetSection("Data"))
-                .Configure<CrusaderApiSettings>(Configuration.GetSection("CrusaderApi"));
+                .Configure<DataOptions>(Configuration.GetSection("Data"))
+                .Configure<CrusaderApiOptions>(Configuration.GetSection("CrusaderApi"));
 
             // In production, the React files will be served from this directory.
             services.AddSpaStaticFiles(configuration =>

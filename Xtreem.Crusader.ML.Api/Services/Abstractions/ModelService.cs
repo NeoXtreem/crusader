@@ -1,23 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
-using Xtreem.Crusader.ML.Data.Settings;
+using Xtreem.Crusader.ML.Data.Attributes;
+using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.ML.Data.Types;
 
 namespace Xtreem.Crusader.ML.Api.Services.Abstractions
 {
     internal abstract class ModelService : IModelService
     {
-        protected readonly ModelSettings ModelSettings;
+        protected readonly ModelOptions Options;
 
-        protected ModelService(IOptions<ModelSettings> modelOptions)
+        protected ModelService(IOptionsFactory<ModelOptions> optionsFactory)
         {
-            ModelSettings = modelOptions.Value;
+            Options = optionsFactory.Create(Microsoft.Extensions.Options.Options.DefaultName);
         }
 
-        public bool CanTrain() => GetType().Name.StartsWith(ModelSettings.Type);
+        public bool CanTrain(Type type) => type.GetCustomAttribute<PredictionModelAttribute>().PredictionModel == PredictionModel;
 
         public ITransformer Train<TOutput>(IEnumerable<TOutput> items) where TOutput : class => Train(new MLContext(0), items);
+
+        protected abstract PredictionModel PredictionModel { get; }
 
         protected abstract ITransformer Train<TOutput>(MLContext mlContext, IEnumerable<TOutput> items) where TOutput : class;
     }

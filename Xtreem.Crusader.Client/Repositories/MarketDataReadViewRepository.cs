@@ -13,7 +13,11 @@ namespace Xtreem.Crusader.Client.Repositories
     {
         private readonly IMarketDataContext _context;
 
-        public MarketDataReadViewRepository(IMarketDataContext context) : base(context) => _context = context;
+        public MarketDataReadViewRepository(IMarketDataContext context)
+            : base(context)
+        {
+            _context = context;
+        }
 
         public long GetNextTime(string baseCurrency, string quoteCurrency, Resolution resolution, long from)
         {

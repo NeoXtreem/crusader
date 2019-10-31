@@ -1,15 +1,17 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
-using Xtreem.Crusader.Data.Settings;
+using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Api.Loaders;
-using Xtreem.Crusader.ML.Api.Settings;
+using Xtreem.Crusader.ML.Api.Models;
+using Xtreem.Crusader.ML.Api.Services.Abstractions;
+using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.ML.Data.Settings;
 using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.ML.Api
@@ -34,9 +36,9 @@ namespace Xtreem.Crusader.ML.Api
 
             services
                 .ScanAssembly()
-                .Configure<ModelSettings>(Configuration.GetSection("Model"))
-                .Configure<DataSettings>(Configuration.GetSection("Data"))
-                .Configure<CryptoCompareSettings>(Configuration.GetSection("CryptoCompare"));
+                .Configure<ModelOptions>(Configuration.GetSection("Model"))
+                .Configure<DataOptions>(Configuration.GetSection("Data"))
+                .Configure<CryptoCompareOptions>(Configuration.GetSection("CryptoCompare"));
 
             AddPredictionEnginePool<OhlcvRegressionPrediction>();
             AddPredictionEnginePool<OhlcvTimeSeriesPrediction>();
@@ -53,9 +55,16 @@ namespace Xtreem.Crusader.ML.Api
                     return new PredictionEnginePool<OhlcvInput, TPrediction>();
                 }*/);
 
-                services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, TPrediction>>().Configure(options =>
+                services.AddSingleton<LazyService<PredictionEnginePool<OhlcvInput, TPrediction>>>();
+
+                services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, TPrediction>>().Configure(pepOptions =>
                 {
-                    options.ModelLoader = services.BuildServiceProvider().GetService<TrainModelLoader>();
+                    services.AddOptions<TrainModelLoaderOptions>().Configure(tmlOptions =>
+                    {
+                        tmlOptions.ModelService = services.BuildServiceProvider().GetServices<IModelService>().Single(s => s.CanTrain(typeof(TPrediction)));
+                    });
+
+                    pepOptions.ModelLoader = services.BuildServiceProvider().GetService<TrainModelLoader>();
                 });
             }
         }

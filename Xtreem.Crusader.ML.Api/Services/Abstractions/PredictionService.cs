@@ -7,22 +7,21 @@ using Microsoft.Extensions.Options;
 using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.ML.Data.Settings;
 
 namespace Xtreem.Crusader.ML.Api.Services.Abstractions
 {
     internal abstract class PredictionService<TPrediction> : IPredictionService where TPrediction : class, new()
     {
-        protected readonly PredictionEnginePool<OhlcvInput, TPrediction> PredictionEnginePool;
-        private readonly ModelSettings _modelSettings;
+        private readonly ModelOptions _options;
+        protected readonly LazyService<PredictionEnginePool<OhlcvInput, TPrediction>> LazyPredictionEnginePool;
 
-        protected PredictionService(PredictionEnginePool<OhlcvInput, TPrediction> predictionEnginePool, IOptions<ModelSettings> modelOptions)
+        protected PredictionService(IOptionsFactory<ModelOptions> optionsFactory, LazyService<PredictionEnginePool<OhlcvInput, TPrediction>> lazyPredictionEnginePool)
         {
-            PredictionEnginePool = predictionEnginePool;
-            _modelSettings = modelOptions.Value;
+            _options = optionsFactory.Create(Options.DefaultName);
+            LazyPredictionEnginePool = lazyPredictionEnginePool;
         }
 
-        public bool CanPredict() => GetType().Name.StartsWith(_modelSettings.Type);
+        public bool CanPredict() => GetType().Name.StartsWith(_options.Type);
 
         public ReadOnlyCollection<Ohlcv> Predict(CurrencyPairChartPeriod predictionPeriod)
         {

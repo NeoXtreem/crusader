@@ -5,7 +5,7 @@ using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.ML.Data.Settings;
+using Xtreem.Crusader.ML.Data.Types;
 using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.ML.Api.Services
@@ -13,9 +13,12 @@ namespace Xtreem.Crusader.ML.Api.Services
     [Inject, UsedImplicitly]
     internal class TimeSeriesModelService : ModelService
     {
-        public TimeSeriesModelService(IOptions<ModelSettings> modelOptions) : base(modelOptions)
+        public TimeSeriesModelService(IOptionsFactory<ModelOptions> optionsFactory)
+            : base(optionsFactory)
         {
         }
+
+        protected override PredictionModel PredictionModel => PredictionModel.TimeSeries;
 
         protected override ITransformer Train<TOutput>(MLContext mlContext, IEnumerable<TOutput> items)
         {
@@ -34,7 +37,7 @@ namespace Xtreem.Crusader.ML.Api.Services
 
             var transformer = estimator.Fit(trainTestData.TrainSet);
             using var engine = transformer.CreateTimeSeriesEngine<OhlcvInput, OhlcvTimeSeriesPrediction>(mlContext);
-            engine.CheckPoint(mlContext, ModelSettings.FilePath);
+            engine.CheckPoint(mlContext, Options.FilePath);
 
             return transformer;
         }

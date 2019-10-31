@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace Xtreem.Crusader.Data.Settings
+namespace Xtreem.Crusader.Data.Models
 {
-    public class DataSettings
+    public class DataOptions
     {
         [UsedImplicitly]
         public string Endpoint { get; set; }

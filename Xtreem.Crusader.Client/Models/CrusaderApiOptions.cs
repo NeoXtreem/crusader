@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace Xtreem.Crusader.Client.Settings
+namespace Xtreem.Crusader.Client.Models
 {
-    internal class CrusaderApiSettings
+    internal class CrusaderApiOptions
     {
         [UsedImplicitly]
         public string CapeApiBaseUrl { get; set; }

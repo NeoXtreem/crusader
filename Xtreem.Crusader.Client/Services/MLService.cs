@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
+using Xtreem.Crusader.Client.Models;
 using Xtreem.Crusader.Client.Services.Interfaces;
-using Xtreem.Crusader.Client.Settings;
 using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Utilities.Attributes;
 using Xtreem.Crusader.Utilities.Exceptions;
@@ -16,16 +16,16 @@ namespace Xtreem.Crusader.Client.Services
     [Inject, UsedImplicitly]
     internal class MLService : IMLService
     {
-        private readonly CrusaderApiSettings _settings;
+        private readonly CrusaderApiOptions _options;
 
-        public MLService(IOptions<CrusaderApiSettings> options)
+        public MLService(IOptionsFactory<CrusaderApiOptions> optionsFactory)
         {
-            _settings = options.Value;
+            _options = optionsFactory.Create(Options.DefaultName);
         }
 
         public async Task<ReadOnlyCollection<Ohlcv>> PredictAsync(CurrencyPairChartPeriod currencyPairChartPeriod, CancellationToken cancellationToken)
         {
-            var response = await new HttpClient {BaseAddress = new Uri(_settings.MLApiBaseUrl)}.PostAsJsonAsync("ml", currencyPairChartPeriod, cancellationToken);
+            var response = await new HttpClient {BaseAddress = new Uri(_options.MLApiBaseUrl)}.PostAsJsonAsync("ml", currencyPairChartPeriod, cancellationToken);
 
             if (response.IsSuccessStatusCode)
             {

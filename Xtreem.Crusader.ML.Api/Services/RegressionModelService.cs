@@ -8,7 +8,8 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Attributes;
-using Xtreem.Crusader.ML.Data.Settings;
+using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.ML.Data.Types;
 using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.ML.Api.Services
@@ -16,9 +17,12 @@ namespace Xtreem.Crusader.ML.Api.Services
     [Inject, UsedImplicitly]
     internal class RegressionModelService : ModelService
     {
-        public RegressionModelService(IOptions<ModelSettings> modelOptions) : base(modelOptions)
+        public RegressionModelService(IOptionsFactory<ModelOptions> optionsFactory)
+            : base(optionsFactory)
         {
         }
+
+        protected override PredictionModel PredictionModel => PredictionModel.Regression;
 
         protected override ITransformer Train<TOutput>(MLContext mlContext, IEnumerable<TOutput> items)
         {
@@ -72,7 +76,7 @@ namespace Xtreem.Crusader.ML.Api.Services
             var trainTestData = mlContext.Data.TrainTestSplit(mlContext.Data.LoadFromEnumerable(items));
             var model = pipeline.Fit(trainTestData.TrainSet);
 
-            mlContext.Model.Save(model, trainTestData.TrainSet.Schema, ModelSettings.FilePath);
+            mlContext.Model.Save(model, trainTestData.TrainSet.Schema, Options.FilePath);
 
             var metrics = mlContext.Regression.Evaluate(model.Transform(trainTestData.TestSet));
 

@@ -14,7 +14,11 @@ namespace Xtreem.Crusader.ML.Api.Repositories
     {
         private readonly IMarketDataContext _context;
 
-        public MarketDataReadWriteRepository(IMarketDataContext context) : base(context) => _context = context;
+        public MarketDataReadWriteRepository(IMarketDataContext context)
+            : base(context)
+        {
+            _context = context;
+        }
 
         public async Task AddOhlcvsAsync(IEnumerable<Ohlcv> items)
         {

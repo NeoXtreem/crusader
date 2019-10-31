@@ -3,8 +3,8 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceStack.Text;
+using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Repositories.Interfaces;
-using Xtreem.Crusader.Data.Settings;
 using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.Data.Exporter
@@ -14,8 +14,8 @@ namespace Xtreem.Crusader.Data.Exporter
     {
         private static void Main(string[] args)
         {
-            // Configure settings.
-            var dataSettings = new ConfigurationBuilder()
+            // Configure options.
+            var options = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build()
@@ -24,7 +24,7 @@ namespace Xtreem.Crusader.Data.Exporter
             // Set up DI.
             var serviceProvider = new ServiceCollection()
                 .ScanAssembly()
-                .Configure<DataSettings>(dataSettings)
+                .Configure<DataOptions>(options)
                 .BuildServiceProvider();
 
             using var writer = File.CreateText("ohlcv.csv");

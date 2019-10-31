@@ -13,7 +13,6 @@ using Xtreem.Crusader.ML.Api.Exceptions;
 using Xtreem.Crusader.ML.Api.Models;
 using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
-using Xtreem.Crusader.ML.Api.Settings;
 using Xtreem.Crusader.Utilities.Attributes;
 using Xtreem.Crusader.Utilities.Exceptions;
 
@@ -22,12 +21,12 @@ namespace Xtreem.Crusader.ML.Api.Services
     [Inject, UsedImplicitly]
     internal class CryptoCompareService : ICryptoCompareService
     {
-        private readonly CryptoCompareSettings _settings;
+        private readonly CryptoCompareOptions _options;
         private readonly IMarketDataReadWriteRepository _marketDataReadWriteRepository;
 
-        public CryptoCompareService(IOptions<CryptoCompareSettings> options, IMarketDataReadWriteRepository marketDataReadWriteRepository)
+        public CryptoCompareService(IOptionsFactory<CryptoCompareOptions> optionsFactory, IMarketDataReadWriteRepository marketDataReadWriteRepository)
         {
-            _settings = options.Value;
+            _options = optionsFactory.Create(Options.DefaultName);
             _marketDataReadWriteRepository = marketDataReadWriteRepository;
         }
 
@@ -49,7 +48,7 @@ namespace Xtreem.Crusader.ML.Api.Services
             {
                 if (cancellationToken.IsCancellationRequested) break;
 
-                using var client = new HttpClient {BaseAddress = new Uri(_settings.BaseUrl)};
+                using var client = new HttpClient {BaseAddress = new Uri(_options.BaseUrl)};
 
                 // Calculate the limit to pass based on the size of the current batch.
                 var limit = Math.Min(resolution.IntervalsInPeriod(batchTo - from), maxLimit);
@@ -61,7 +60,7 @@ namespace Xtreem.Crusader.ML.Api.Services
                         ("fsym", baseCurrency),
                         ("tsym", quoteCurrency),
                         ("toTs", ((DateTimeOffset)batchTo).ToUniversalTime().ToUnixTimeSeconds().ToString()),
-                        ("api_key", _settings.ApiKey),
+                        ("api_key", _options.ApiKey),
                         ("limit", limit.ToString())
                     }.ToDictionary(p => p.key, p => p.value.ToString())), cancellationToken);
 

@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace Xtreem.Crusader.ML.Api.Settings
+namespace Xtreem.Crusader.ML.Api.Models
 {
-    internal class CryptoCompareSettings
+    internal class CryptoCompareOptions
     {
         [UsedImplicitly]
         public string BaseUrl { get; set; }
