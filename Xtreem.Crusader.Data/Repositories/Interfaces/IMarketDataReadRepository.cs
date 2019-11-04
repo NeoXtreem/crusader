@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.Shared.Models;
 
 namespace Xtreem.Crusader.Data.Repositories.Interfaces
 {

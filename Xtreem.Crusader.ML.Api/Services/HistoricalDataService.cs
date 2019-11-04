@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
+using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.ML.Api.Services

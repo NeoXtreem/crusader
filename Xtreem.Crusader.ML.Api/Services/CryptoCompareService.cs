@@ -8,11 +8,11 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Api.Exceptions;
 using Xtreem.Crusader.ML.Api.Models;
 using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
+using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Attributes;
 using Xtreem.Crusader.Utilities.Exceptions;
 

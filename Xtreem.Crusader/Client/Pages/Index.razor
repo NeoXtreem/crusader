@@ -1,0 +1,86 @@
+﻿@page "/"
+@using System.Collections.ObjectModel
+@using System.Diagnostics
+@using Xtreem.Crusader.Shared.Models
+@using Xtreem.Crusader.Shared.Types
+@inject HttpClient Http
+
+<div id="selection-area" class="col">
+    <!-- Currency selection -->
+    <div class="row py-1">
+        <!-- Base currency -->
+        <div class="col pr-0">
+            <div class="form-control d-flex">
+                <div><i>¤</i>&nbsp;&nbsp;Base:</div>
+                <input list="symbols" placeholder="..." @bind="_currencyPairChartPeriod.CurrencyPairChart.CurrencyPair.BaseCurrency" />
+            </div>
+        </div>
+        <div class="col px-2 py-1 align-self-end arrow">➝</div>
+
+        <!-- Quote currency -->
+        <div class="col pl-0">
+            <div class="form-control d-flex">
+                <div><i>¤</i>&nbsp;&nbsp;Quote:</div>
+                <input list="symbols" placeholder="..." @bind="_currencyPairChartPeriod.CurrencyPairChart.CurrencyPair.QuoteCurrency" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Prediction period dates -->
+    <div class="row py-1">
+        <!-- From date -->
+        <div class="col pr-0">
+            <div class="form-control d-flex">
+                <div><i>🗓</i>&nbsp;&nbsp;From:</div>
+                <input type="date" @bind="_currencyPairChartPeriod.DateTimeInterval.From" @bind:format="yyyy-MM-dd" />
+            </div>
+        </div>
+        <div class="col px-2 py-1 align-self-end arrow">➝</div>
+
+        <!-- To date -->
+        <div class="col pl-0">
+            <div class="form-control d-flex">
+                <div><i>🗓</i>&nbsp;&nbsp;To:</div>
+                <input type="date" @bind="_currencyPairChartPeriod.DateTimeInterval.To" @bind:format="yyyy-MM-dd" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Resolution -->
+    <div class="row py-1 d-flex px-3">
+        <div>
+            <select class="custom-select" @bind="_currencyPairChartPeriod.CurrencyPairChart.Resolution">
+                <option value="@Resolution.Minute">@Resolution.Minute</option>
+                <option value="@Resolution.Hour">@Resolution.Hour</option>
+                <option value="@Resolution.Day">@Resolution.Day</option>
+            </select>
+        </div>
+        <div class="ml-auto">
+            <button @onclick="@Predict" type="button" class="btn btn-danger px-5">
+                Predict ➝
+            </button>
+        </div>
+    </div>
+</div>
+<SymbolList />
+
+<div id="chart-area">
+    <TradingViewChart />
+</div>
+
+@code {
+    private readonly CurrencyPairChartPeriod _currencyPairChartPeriod = new CurrencyPairChartPeriod
+    {
+        CurrencyPairChart = new CurrencyPairChart
+        {
+            CurrencyPair = new CurrencyPair(),
+            Resolution = Resolution.Minute
+        },
+        DateTimeInterval = new DateTimeInterval {From = DateTime.Now, To = DateTime.Now.AddDays(1)}
+    };
+
+    private async Task Predict()
+    {
+        var ohlcvs = await Http.PostJsonAsync<ReadOnlyCollection<Ohlcv>>("Crusader/Predict", _currencyPairChartPeriod);
+    }
+}

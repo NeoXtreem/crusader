@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.Shared.Models;
 
 namespace Xtreem.Crusader.ML.Api.Profiles
 {
@@ -8,7 +8,7 @@ namespace Xtreem.Crusader.ML.Api.Profiles
     {
         public OhlcvProfile()
         {
-            RecognizeDestinationPostfixes("Prediction");
+            RecognizePostfixes("Prediction");
 
             CreateMap<Ohlcv, OhlcvInput>();
             CreateMap<OhlcvRegressionPrediction, Ohlcv>();

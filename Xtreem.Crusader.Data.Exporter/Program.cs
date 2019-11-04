@@ -3,8 +3,8 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceStack.Text;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Repositories.Interfaces;
+using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.Data.Exporter

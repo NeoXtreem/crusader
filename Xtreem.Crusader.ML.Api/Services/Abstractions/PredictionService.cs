@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.Shared.Models;
 
 namespace Xtreem.Crusader.ML.Api.Services.Abstractions
 {

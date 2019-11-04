@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.Shared.Models;
 
 namespace Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces
 {

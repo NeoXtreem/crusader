@@ -6,12 +6,12 @@ using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.ML;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
-using Xtreem.Crusader.Data.Types;
 using Xtreem.Crusader.ML.Api.Profiles;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.Shared.Models;
+using Xtreem.Crusader.Shared.Types;
 using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.ML.Api.Loaders

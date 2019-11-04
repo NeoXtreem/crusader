@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Api.Converters;
+using Xtreem.Crusader.Shared.Models;
 
 namespace Xtreem.Crusader.ML.Api.Models
 {

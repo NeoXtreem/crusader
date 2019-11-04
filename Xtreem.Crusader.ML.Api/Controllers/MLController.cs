@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
+using Xtreem.Crusader.Shared.Models;
 
 namespace Xtreem.Crusader.ML.Api.Controllers
 {

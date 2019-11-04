@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>X-treem Software</Authors>
     <Copyright>2019 X-treem Software Limited</Copyright>
     <Product>Crusader DAL</Product>
@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Xtreem.Crusader.Utilities\Xtreem.Crusader.Utilities.csproj" />
+    <ProjectReference Include="..\Xtreem.Crusader\Shared\Xtreem.Crusader.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,12 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.ML.Api.Loaders;
 using Xtreem.Crusader.ML.Api.Models;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.ML.Api
@@ -28,11 +28,7 @@ namespace Xtreem.Crusader.ML.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // ReSharper disable once CommentTypo
-            //TODO: Call AddNewtonsoftJson for Resolution type to deserialize as it has a readonly property as per https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#jsonnet-support. Revert if https://github.com/dotnet/corefx/issues/40602 is resolved.
-            services
-                .AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers();
 
             services
                 .ScanAssembly()

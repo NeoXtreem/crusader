@@ -7,7 +7,7 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Options;
 using Xtreem.Crusader.Data.Contexts.Interfaces;
-using Xtreem.Crusader.Data.Models;
+using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.Data.Contexts

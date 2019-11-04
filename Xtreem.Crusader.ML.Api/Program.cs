@@ -5,13 +5,18 @@ using Microsoft.AspNetCore.Hosting;
 namespace Xtreem.Crusader.ML.Api
 {
     [UsedImplicitly]
-    internal class Program
+    public class Program
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args) => WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return WebHost
+                .CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+        }
     }
 }

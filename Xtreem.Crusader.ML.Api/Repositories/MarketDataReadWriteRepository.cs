@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Xtreem.Crusader.Data.Contexts.Interfaces;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Repositories;
 using Xtreem.Crusader.ML.Api.Repositories.Interfaces;
+using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.ML.Api.Repositories

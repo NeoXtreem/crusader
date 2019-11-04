@@ -4,11 +4,11 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
-using Xtreem.Crusader.Data.Models;
 using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Api.Profiles;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Models;
+using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Attributes;
 using Xtreem.Crusader.Utilities.Extensions;
 

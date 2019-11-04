@@ -1,0 +1,96 @@
+.TradingViewChart {
+	height: calc(100vh - 300px);
+}
+
+.form-control {
+    white-space: nowrap;
+
+    &:focus-within {
+        border-color: #2784ff;
+    }
+
+    div {
+        color: #c4c4c4;
+        flex: initial;
+        width: 75px;
+
+        i {
+            font-style: normal;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #eee;
+        }
+    }
+
+    input {
+        border: 0;
+        flex: auto;
+        width: 0;
+        padding-left: 6px;
+        background: none;
+        font-weight: 600;
+        color: white;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.row {
+    flex-wrap: nowrap !important;
+}
+
+.arrow {
+    flex-grow: 0;
+    font-size: 20px;
+    color: gray;
+}
+
+#selection-area {
+    flex: initial;
+    background: linear-gradient(135deg, #131722 0%, #131722 30%, #131722 85%, #131722 100%);
+
+    select {
+        background-color: rgba(0, 0, 0, 0.15);
+        border: none;
+        color: white;
+        font-weight: 600;
+    }
+
+    .form-control {
+        border: none;
+        padding-bottom: .25rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: lawngreen;
+    }
+
+    select {
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        option {
+            color: black;
+        }
+    }
+
+    button {
+        box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4);
+        background-color: dimgray;
+        border: none;
+        font-weight: 600;
+        color: whitesmoke;
+    }
+
+    .d-flex {
+        button {
+            width: 200px;
+            flex: initial;
+        }
+    }
+}
+
+#chart-area {
+    flex: initial;
+    background: linear-gradient(135deg, #131722 0%, #131722 30%, #131722 85%, #131722 100%);
+}

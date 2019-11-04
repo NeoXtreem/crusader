@@ -1,0 +1,19 @@
+﻿@inject HttpClient Http
+
+<datalist id="symbols">
+    @foreach (var symbol in _symbols)
+    {
+        <option value="@symbol">@symbol (@symbol)</option>
+    }
+</datalist>
+
+@code
+{
+    private string[] _symbols = Array.Empty<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _symbols = new[] {"BTC", "USD"};
+        //symbols = await Http.GetJsonAsync<string[]>("Crusader/Symbols");
+    }
+}
