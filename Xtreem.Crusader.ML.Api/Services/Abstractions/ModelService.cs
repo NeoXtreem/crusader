@@ -21,10 +21,10 @@ namespace Xtreem.Crusader.ML.Api.Services.Abstractions
 
         public bool CanTrain(Type type) => type.GetCustomAttribute<PredictionModelAttribute>().PredictionModel == PredictionModel;
 
-        public ITransformer Train<TOutput>(IEnumerable<TOutput> items) where TOutput : class => Train(new MLContext(0), items);
+        public ITransformer Train<TInput>(IEnumerable<TInput> items) where TInput : class => Train(new MLContext(0), items);
 
         protected abstract PredictionModel PredictionModel { get; }
 
-        protected abstract ITransformer Train<TOutput>(MLContext mlContext, IEnumerable<TOutput> items) where TOutput : class;
+        protected abstract ITransformer Train<TInput>(MLContext mlContext, IEnumerable<TInput> items) where TInput : class;
     }
 }

@@ -3,9 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.3</LangVersion>
+    <Copyright>2019 X-treem Software Limited</Copyright>
+    <Authors>X-treem Software</Authors>
+    <Product>Crusader Shared Library</Product>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.Text.Json" Version="4.6.0" />
   </ItemGroup>

@@ -9,6 +9,6 @@ namespace Xtreem.Crusader.Utilities.Extensions
     {
         public static ReadOnlyCollection<T> AsReadOnly<T>(this IEnumerable<T> items) => Array.AsReadOnly(items.ToArrayOrCast());
 
-        private static T[] ToArrayOrCast<T>(this IEnumerable<T> items) => items as T[] ?? items.ToArray();
+        public static T[] ToArrayOrCast<T>(this IEnumerable<T> items) => items as T[] ?? items.ToArray();
     }
 }

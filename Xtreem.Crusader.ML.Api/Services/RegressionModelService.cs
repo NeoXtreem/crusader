@@ -24,9 +24,9 @@ namespace Xtreem.Crusader.ML.Api.Services
 
         protected override PredictionModel PredictionModel => PredictionModel.Regression;
 
-        protected override ITransformer Train<TOutput>(MLContext mlContext, IEnumerable<TOutput> items)
+        protected override ITransformer Train<TInput>(MLContext mlContext, IEnumerable<TInput> items)
         {
-            var properties = typeof(TOutput).GetProperties().Select(p => (property: p, attributes: p.GetCustomAttributes())).Where(p => !p.attributes.OfType<ColumnNameAttribute>().Any()).ToArray();
+            var properties = typeof(TInput).GetProperties().Select(p => (property: p, attributes: p.GetCustomAttributes())).Where(p => !p.attributes.OfType<ColumnNameAttribute>().Any()).ToArray();
             var propertyNames = properties.Select(p => p.property.Name).ToArray();
             var encodedColumnPairs = GetPropertiesWithAttributes<EncodedColumnAttribute>().Select(p => new InputOutputColumnPair($"{p.property.Name}Encoded", p.property.Name)).ToArray();
             var labelColumnProperties = GetPropertiesWithAttributes<LabelColumnAttribute>().ToArray();
@@ -36,24 +36,24 @@ namespace Xtreem.Crusader.ML.Api.Services
                 return properties.Select(p => (p.property, attribute: p.attributes.OfType<TAttribute>().SingleOrDefault())).Where(p => p.attribute != null);
             }
 
-            IEstimator<ITransformer> pipeline = null;
+            IEstimator<ITransformer> pipeline = new EstimatorChain<ITransformer>();
 
-            // If there are label columns specified, build a model for each one.
-            foreach (var (property, attribute) in labelColumnProperties)
+            if (labelColumnProperties.Any())
             {
-                IEstimator<ITransformer> estimator = CreateEstimators(property.Name)
-                    .Aggregate((IEstimator<ITransformer>)mlContext.Transforms.CopyColumns("Label", property.Name), (c, e) => c.Append(e))
-                    .Append(mlContext.Transforms.CopyColumns(attribute.ScoreColumnName, "Score"));
+                // Build a model for each specified named label column to achieve imputation.
+                foreach (var (property, attribute) in labelColumnProperties)
+                {
+                    IEstimator<ITransformer> estimator = CreateEstimators()
+                        .Aggregate((IEstimator<ITransformer>)mlContext.Transforms.CopyColumns("Label", property.Name), (c, e) => c.Append(e))
+                        .Append(mlContext.Transforms.CopyColumns(attribute.ScoreColumnName, "Score"));
 
-                // Appends to the pipeline only after the first iteration.
-                pipeline = pipeline?.Append(estimator) ?? estimator;
+                    pipeline = pipeline.Append(estimator);
+                }
             }
-
-            // Otherwise, build a model on the assumption that columns named Label and Score are specified.
-            if (pipeline is null)
+            else
             {
-                var estimators = CreateEstimators();
-                pipeline = estimators.Skip(1).Aggregate(estimators.First(), (c, e) => c.Append(e));
+                // Build a model on the assumption that columns named Label and Score are present.
+                pipeline = CreateEstimators().Aggregate(pipeline, (c, e) => c.Append(e));
             }
 
             IEstimator<ITransformer>[] CreateEstimators(string labelPropertyName = null)

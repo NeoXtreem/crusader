@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Copyright>2019 X-treem Software Limited</Copyright>
+    <Authors>X-treem Software</Authors>
+    <Product>Crusader Utilities Library</Product>
   </PropertyGroup>
 
   <ItemGroup>

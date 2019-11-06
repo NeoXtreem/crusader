@@ -3,24 +3,26 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
+    <Copyright>2019 X-treem Software Limited</Copyright>
+    <Authors>X-treem Software</Authors>
+    <Product>Crusader Client</Product>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\charting_library\**" />
     <Compile Remove="wwwroot\datafeeds\**" />
+    <Content Remove="wwwroot\charting_library\**" />
     <Content Remove="wwwroot\datafeeds\**" />
+    <EmbeddedResource Remove="wwwroot\charting_library\**" />
     <EmbeddedResource Remove="wwwroot\datafeeds\**" />
+    <None Remove="wwwroot\charting_library\**" />
     <None Remove="wwwroot\datafeeds\**" />
+    <TypeScriptCompile Remove="wwwroot\charting_library\**" />
     <TypeScriptCompile Remove="wwwroot\datafeeds\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
-    <Content Remove="wwwroot\favicon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Remove="wwwroot\charting_library\charting_library.min.d.ts" />
-    <TypeScriptCompile Remove="wwwroot\charting_library\datafeed-api.d.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,9 +31,6 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
-    <None Include="wwwroot\charting_library\charting_library.min.d.ts" />
-    <None Include="wwwroot\charting_library\datafeed-api.d.ts" />
-    <None Include="wwwroot\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,10 +38,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.1.0-preview1.19508.20" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.1.0-preview1.19508.20" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.1.0-preview1.19508.20" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.6.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Xtreem.Crusader.Shared.csproj" />

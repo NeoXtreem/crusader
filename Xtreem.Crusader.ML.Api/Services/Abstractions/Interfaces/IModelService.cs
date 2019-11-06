@@ -8,6 +8,6 @@ namespace Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces
     {
         bool CanTrain(Type type);
 
-        ITransformer Train<TOutput>(IEnumerable<TOutput> items) where TOutput : class;
+        ITransformer Train<TInput>(IEnumerable<TInput> items) where TInput : class;
     }
 }

@@ -7,6 +7,7 @@ using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.ML.Data.Types;
 using Xtreem.Crusader.Utilities.Attributes;
+using Xtreem.Crusader.Utilities.Extensions;
 
 namespace Xtreem.Crusader.ML.Api.Services
 {
@@ -20,22 +21,22 @@ namespace Xtreem.Crusader.ML.Api.Services
 
         protected override PredictionModel PredictionModel => PredictionModel.TimeSeries;
 
-        protected override ITransformer Train<TOutput>(MLContext mlContext, IEnumerable<TOutput> items)
+        protected override ITransformer Train<TInput>(MLContext mlContext, IEnumerable<TInput> items)
         {
-            var trainTestData = mlContext.Data.TrainTestSplit(mlContext.Data.LoadFromEnumerable(items));
-            var seriesLength = (int)trainTestData.TrainSet.GetRowCount().GetValueOrDefault();
+            var data = items.ToArrayOrCast();
+            var trainData = mlContext.Data.LoadFromEnumerable(data);
 
-            IEstimator<ITransformer> estimator = mlContext.Forecasting.ForecastBySsa(
-                nameof(OhlcvRegressionPrediction.ClosePrediction),
+            var estimator = mlContext.Forecasting.ForecastBySsa(
+                nameof(OhlcvTimeSeriesPrediction.ClosePrediction),
                 nameof(OhlcvInput.Close),
                 12,
-                seriesLength,
-                seriesLength,
+                data.Length,
+                data.Length,
                 2,
                 confidenceLowerBoundColumn: nameof(OhlcvTimeSeriesPrediction.ConfidenceLowerBound),
                 confidenceUpperBoundColumn: nameof(OhlcvTimeSeriesPrediction.ConfidenceUpperBound));
 
-            var transformer = estimator.Fit(trainTestData.TrainSet);
+            var transformer = estimator.Fit(trainData);
             using var engine = transformer.CreateTimeSeriesEngine<OhlcvInput, OhlcvTimeSeriesPrediction>(mlContext);
             engine.CheckPoint(mlContext, Options.FilePath);
 

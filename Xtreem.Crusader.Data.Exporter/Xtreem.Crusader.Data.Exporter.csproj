@@ -3,6 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Copyright>2019 X-treem Software Limited</Copyright>
+    <Authors>X-treem Software</Authors>
+    <Product>Crusader Data Exporter</Product>
   </PropertyGroup>
 
   <ItemGroup>
