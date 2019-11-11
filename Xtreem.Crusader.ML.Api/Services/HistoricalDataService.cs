@@ -33,7 +33,7 @@ namespace Xtreem.Crusader.ML.Api.Services
             }
 
             var ohlcvs = _marketDataReadWriteRepository.GetOhlcvs(currencyPairChartPeriod).ToArray();
-            var currentFrom = currencyPairChartPeriod.DateTimeInterval.From;
+            var currentFrom = currencyPairChartPeriod.DateTimeInterval.From.ToUniversalTime();
             var interval = currencyPairChartPeriod.CurrencyPairChart.Resolution.Interval;
 
             // Find all gaps in the stored OHLCV data and fill these by loading them from CryptoCompare.
@@ -49,12 +49,12 @@ namespace Xtreem.Crusader.ML.Api.Services
             }
 
             // Ensure any trailing gap is covered.
-            if (currentFrom != currencyPairChartPeriod.DateTimeInterval.To)
+            if (currentFrom != currencyPairChartPeriod.DateTimeInterval.To.ToUniversalTime())
             {
                 await LoadHistoricalDataForGap(currentFrom, currencyPairChartPeriod.DateTimeInterval.To);
             }
 
-            return ohlcvs.Concat(newOhlcvs);
+            return ohlcvs.Concat(newOhlcvs).OrderBy(o => o.Time);
         }
     }
 }

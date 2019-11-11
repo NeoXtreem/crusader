@@ -37,8 +37,8 @@ namespace Xtreem.Crusader.ML.Api.Services
 
             var currencyPairChart = currencyPairChartPeriod.CurrencyPairChart;
             var currencyPair = currencyPairChart.CurrencyPair;
-            var from = currencyPairChartPeriod.DateTimeInterval.From;
-            var to = currencyPairChartPeriod.DateTimeInterval.To;
+            var from = currencyPairChartPeriod.DateTimeInterval.From.ToUniversalTime();
+            var to = currencyPairChartPeriod.DateTimeInterval.To.ToUniversalTime();
             var resolution = currencyPairChart.Resolution;
             var baseCurrency = currencyPair.BaseCurrency;
             var quoteCurrency = currencyPair.QuoteCurrency;

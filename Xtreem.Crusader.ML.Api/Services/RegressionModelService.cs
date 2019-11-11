@@ -43,11 +43,9 @@ namespace Xtreem.Crusader.ML.Api.Services
                 // Build a model for each specified named label column to achieve imputation.
                 foreach (var (property, attribute) in labelColumnProperties)
                 {
-                    IEstimator<ITransformer> estimator = CreateEstimators()
+                    pipeline = pipeline.Append(CreateEstimators()
                         .Aggregate((IEstimator<ITransformer>)mlContext.Transforms.CopyColumns("Label", property.Name), (c, e) => c.Append(e))
-                        .Append(mlContext.Transforms.CopyColumns(attribute.ScoreColumnName, "Score"));
-
-                    pipeline = pipeline.Append(estimator);
+                        .Append(mlContext.Transforms.CopyColumns(attribute.ScoreColumnName, "Score")));
                 }
             }
             else
