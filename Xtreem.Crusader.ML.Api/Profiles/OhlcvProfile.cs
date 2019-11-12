@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.Shared.Models;
 
@@ -12,7 +13,7 @@ namespace Xtreem.Crusader.ML.Api.Profiles
 
             CreateMap<Ohlcv, OhlcvInput>();
             CreateMap<OhlcvRegressionPrediction, Ohlcv>();
-            CreateMap<OhlcvTimeSeriesPrediction, Ohlcv>();
+            CreateMap<OhlcvTimeSeriesPrediction, IEnumerable<Ohlcv>>();
         }
     }
 }

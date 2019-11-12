@@ -24,7 +24,7 @@ namespace Xtreem.Crusader.ML.Api.Controllers
         [HttpPost]
         public ActionResult<ReadOnlyCollection<Ohlcv>> Post(CurrencyPairChartPeriod currencyPairChartPeriod)
         {
-            return Ok(_predictionServices.Single(s => s.CanPredict()).Predict(currencyPairChartPeriod));
+            return Ok(_predictionServices.Single(s => s.CanUse()).Predict(currencyPairChartPeriod));
         }
     }
 }

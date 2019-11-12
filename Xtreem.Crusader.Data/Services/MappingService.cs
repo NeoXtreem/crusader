@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using AutoMapper;
 using JetBrains.Annotations;
-using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
+using Xtreem.Crusader.Data.Services.Interfaces;
 using Xtreem.Crusader.Utilities.Attributes;
 
-namespace Xtreem.Crusader.Data.Services.Abstractions
+namespace Xtreem.Crusader.Data.Services
 {
     [Inject, UsedImplicitly]
     public class MappingService : IMappingService

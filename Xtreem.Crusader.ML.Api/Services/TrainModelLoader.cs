@@ -1,32 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.Extensions.ML;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.ML;
-using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
+using Xtreem.Crusader.Data.Services.Interfaces;
 using Xtreem.Crusader.ML.Api.Profiles;
+using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Shared.Types;
 using Xtreem.Crusader.Utilities.Attributes;
 
-namespace Xtreem.Crusader.ML.Api.Loaders
+namespace Xtreem.Crusader.ML.Api.Services
 {
     [Inject, UsedImplicitly]
     internal class TrainModelLoader : ModelLoader
     {
-        private readonly TrainModelLoaderOptions _options;
+        private readonly IEnumerable<IModelService> _modelServices;
         private readonly IMappingService _mappingService;
         private readonly IHistoricalDataService _historicalDataService;
         private CancellationTokenSource _cts;
 
-        public TrainModelLoader(IOptionsFactory<TrainModelLoaderOptions> optionsFactory, IMappingService mappingService, IHistoricalDataService historicalDataService)
+        public TrainModelLoader(IEnumerable<IModelService> modelServices, IMappingService mappingService, IHistoricalDataService historicalDataService)
         {
-            _options = optionsFactory.Create(Options.DefaultName);
+            _modelServices = modelServices;
             _mappingService = mappingService;
             _historicalDataService = historicalDataService;
         }
@@ -35,15 +36,16 @@ namespace Xtreem.Crusader.ML.Api.Loaders
         {
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
+            var toDate = DateTime.UtcNow;
 
-            return _options.ModelService.Train(_mappingService.GetMapper<OhlcvProfile>().Map<IEnumerable<OhlcvInput>>(_historicalDataService.GetHistoricalDataAsync(new CurrencyPairChartPeriod
+            return _modelServices.Single(s => s.CanUse()).Train(_mappingService.GetMapper<OhlcvProfile>().Map<IEnumerable<OhlcvInput>>(_historicalDataService.GetHistoricalDataAsync(new CurrencyPairChartPeriod
             {
                 CurrencyPairChart = new CurrencyPairChart
                 {
                     CurrencyPair = new CurrencyPair {BaseCurrency = "BTC", QuoteCurrency = "USD"},
                     Resolution = Resolution.Minute
                 },
-                DateTimeInterval = new DateTimeInterval {From = DateTime.UtcNow.AddHours(-1), To = DateTime.UtcNow}
+                DateTimeInterval = new DateTimeInterval {From = toDate.AddHours(-1), To = toDate}
             }, _cts.Token).Result));
         }
 

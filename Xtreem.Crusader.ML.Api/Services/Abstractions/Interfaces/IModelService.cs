@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.ML;
 
 namespace Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces
 {
     internal interface IModelService
     {
-        bool CanTrain(Type type);
+        bool CanUse();
 
         ITransformer Train<TInput>(IEnumerable<TInput> items) where TInput : class;
     }

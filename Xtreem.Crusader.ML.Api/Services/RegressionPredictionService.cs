@@ -4,7 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
-using Xtreem.Crusader.Data.Services.Abstractions.Interfaces;
+using Xtreem.Crusader.Data.Services.Interfaces;
 using Xtreem.Crusader.ML.Api.Profiles;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Models;
@@ -15,7 +15,7 @@ using Xtreem.Crusader.Utilities.Extensions;
 namespace Xtreem.Crusader.ML.Api.Services
 {
     [Inject, UsedImplicitly]
-    internal class RegressionPredictionService : PredictionService<OhlcvRegressionPrediction>
+    internal class RegressionPredictionService : PredictionEnginePoolService<OhlcvRegressionPrediction>
     {
         private readonly IMappingService _mappingService;
 

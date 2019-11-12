@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Xtreem.Crusader.Data.Services.Abstractions.Interfaces
+namespace Xtreem.Crusader.Data.Services.Interfaces
 {
     public interface IMappingService
     {

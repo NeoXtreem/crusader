@@ -6,10 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
-using Xtreem.Crusader.ML.Api.Loaders;
+using Microsoft.Extensions.Options;
+using Xtreem.Crusader.Data.Services.Interfaces;
 using Xtreem.Crusader.ML.Api.Models;
+using Xtreem.Crusader.ML.Api.Services;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
+using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Extensions;
@@ -34,33 +37,23 @@ namespace Xtreem.Crusader.ML.Api
                 .ScanAssembly()
                 .Configure<ModelOptions>(Configuration.GetSection("Model"))
                 .Configure<DataOptions>(Configuration.GetSection("Data"))
-                .Configure<CryptoCompareOptions>(Configuration.GetSection("CryptoCompare"));
+                .Configure<CryptoCompareOptions>(Configuration.GetSection("CryptoCompare"))
+                /*.AddPredictionEnginePoolConfigOnly()*/; //TODO: Uncomment once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
 
             AddPredictionEnginePool<OhlcvRegressionPrediction>();
-            AddPredictionEnginePool<OhlcvTimeSeriesPrediction>();
 
             void AddPredictionEnginePool<TPrediction>() where TPrediction : class, new()
             {
-                //TODO: Uncomment the delegate in the following statement, and remove the next statement once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
-                services.AddPredictionEnginePool<OhlcvInput, TPrediction>( /*sp =>
+                services.AddPredictionEnginePool<OhlcvInput, TPrediction>(); //TODO: Remove once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
+
+                services.AddSingleton(sp =>
                 {
                     services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, TPrediction>>().Configure(options =>
                     {
                         options.ModelLoader = sp.GetService<TrainModelLoader>();
                     });
-                    return new PredictionEnginePool<OhlcvInput, TPrediction>();
-                }*/);
 
-                services.AddSingleton<LazyService<PredictionEnginePool<OhlcvInput, TPrediction>>>();
-
-                services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, TPrediction>>().Configure(pepOptions =>
-                {
-                    services.AddOptions<TrainModelLoaderOptions>().Configure(tmlOptions =>
-                    {
-                        tmlOptions.ModelService = services.BuildServiceProvider().GetServices<IModelService>().Single(s => s.CanTrain(typeof(TPrediction)));
-                    });
-
-                    pepOptions.ModelLoader = services.BuildServiceProvider().GetService<TrainModelLoader>();
+                    return new LazyService<PredictionEnginePool<OhlcvInput, TPrediction>>(sp);
                 });
             }
         }
