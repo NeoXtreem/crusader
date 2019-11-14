@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using AutoMapper;
 using JetBrains.Annotations;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
-using Xtreem.Crusader.Data.Services.Interfaces;
-using Xtreem.Crusader.ML.Api.Profiles;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.Shared.Models;
@@ -17,20 +16,17 @@ namespace Xtreem.Crusader.ML.Api.Services
     [Inject, UsedImplicitly]
     internal class RegressionPredictionService : PredictionEnginePoolService<OhlcvRegressionPrediction>
     {
-        private readonly IMappingService _mappingService;
+        private readonly IMapper _mapper;
 
-        public RegressionPredictionService(
-            IOptionsFactory<ModelOptions> optionsFactory,
-            LazyService<PredictionEnginePool<OhlcvInput, OhlcvRegressionPrediction>> lazyPredictionEnginePool,
-            IMappingService mappingService)
+        public RegressionPredictionService(IOptionsFactory<ModelOptions> optionsFactory, LazyService<PredictionEnginePool<OhlcvInput, OhlcvRegressionPrediction>> lazyPredictionEnginePool, IMapper mapper)
             : base(optionsFactory, lazyPredictionEnginePool)
         {
-            _mappingService = mappingService;
+            _mapper = mapper;
         }
 
         protected override ReadOnlyCollection<Ohlcv> Predict(IEnumerable<OhlcvInput> ohlcvs)
         {
-            return _mappingService.GetMapper<OhlcvProfile>().Map<IEnumerable<Ohlcv>>(ohlcvs.Select(o => LazyPredictionEnginePool.Value.Predict(o))).AsReadOnly();
+            return _mapper.Map<IEnumerable<Ohlcv>>(ohlcvs.Select(o => LazyPredictionEnginePool.Value.Predict(o))).AsReadOnly();
         }
     }
 }

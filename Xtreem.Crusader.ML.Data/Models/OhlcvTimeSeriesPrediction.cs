@@ -1,29 +1,26 @@
 ﻿using JetBrains.Annotations;
-using Xtreem.Crusader.ML.Data.Attributes;
-using Xtreem.Crusader.ML.Data.Types;
 
 namespace Xtreem.Crusader.ML.Data.Models
 {
-    [PredictionModel(PredictionModel.TimeSeries)]
     public class OhlcvTimeSeriesPrediction : CurrencyPairChartTime
     {
         [UsedImplicitly]
-        public float[] OpenPrediction;
+        public float[] OpenPrediction { get; set; }
 
         [UsedImplicitly]
-        public float[] ClosePrediction;
+        public float[] ClosePrediction { get; set; }
 
         [UsedImplicitly]
-        public float[] HighPrediction;
+        public float[] HighPrediction { get; set; }
 
         [UsedImplicitly]
-        public float[] LowPrediction;
+        public float[] LowPrediction { get; set; }
 
         [UsedImplicitly]
-        public float[] VolumeFromPrediction;
+        public float[] VolumeFromPrediction { get; set; }
 
         [UsedImplicitly]
-        public float[] VolumeToPrediction;
+        public float[] VolumeToPrediction { get; set; }
 
         [UsedImplicitly]
         public float[] ConfidenceLowerBound { get; set; }

@@ -1,13 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using AutoMapper;
 using JetBrains.Annotations;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Primitives;
 using Microsoft.ML;
-using Xtreem.Crusader.Data.Services.Interfaces;
-using Xtreem.Crusader.ML.Api.Profiles;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
@@ -21,14 +20,14 @@ namespace Xtreem.Crusader.ML.Api.Services
     internal class TrainModelLoader : ModelLoader
     {
         private readonly IEnumerable<IModelService> _modelServices;
-        private readonly IMappingService _mappingService;
+        private readonly IMapper _mapper;
         private readonly IHistoricalDataService _historicalDataService;
         private CancellationTokenSource _cts;
 
-        public TrainModelLoader(IEnumerable<IModelService> modelServices, IMappingService mappingService, IHistoricalDataService historicalDataService)
+        public TrainModelLoader(IEnumerable<IModelService> modelServices, IMapper mapper, IHistoricalDataService historicalDataService)
         {
             _modelServices = modelServices;
-            _mappingService = mappingService;
+            _mapper = mapper;
             _historicalDataService = historicalDataService;
         }
 
@@ -38,7 +37,7 @@ namespace Xtreem.Crusader.ML.Api.Services
             _cts = new CancellationTokenSource();
             var toDate = DateTime.UtcNow;
 
-            return _modelServices.Single(s => s.CanUse()).Train(_mappingService.GetMapper<OhlcvProfile>().Map<IEnumerable<OhlcvInput>>(_historicalDataService.GetHistoricalDataAsync(new CurrencyPairChartPeriod
+            return _modelServices.Single(s => s.CanUse()).Train(_mapper.Map<IEnumerable<OhlcvInput>>(_historicalDataService.GetHistoricalDataAsync(new CurrencyPairChartPeriod
             {
                 CurrencyPairChart = new CurrencyPairChart
                 {

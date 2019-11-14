@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using AutoMapper;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,13 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
-using Microsoft.Extensions.Options;
-using Xtreem.Crusader.Data.Services.Interfaces;
 using Xtreem.Crusader.ML.Api.Models;
+using Xtreem.Crusader.ML.Api.Profiles;
 using Xtreem.Crusader.ML.Api.Services;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
-using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
-using Xtreem.Crusader.ML.Api.Services.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.Shared.Models;
 using Xtreem.Crusader.Utilities.Extensions;
@@ -38,6 +35,7 @@ namespace Xtreem.Crusader.ML.Api
                 .Configure<ModelOptions>(Configuration.GetSection("Model"))
                 .Configure<DataOptions>(Configuration.GetSection("Data"))
                 .Configure<CryptoCompareOptions>(Configuration.GetSection("CryptoCompare"))
+                .AddAutoMapper(typeof(OhlcvProfile))
                 /*.AddPredictionEnginePoolConfigOnly()*/; //TODO: Uncomment once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
 
             AddPredictionEnginePool<OhlcvRegressionPrediction>();

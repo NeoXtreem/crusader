@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Xtreem.Crusader.ML.Api.Services.Abstractions.Interfaces;
 using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.ML.Data.Types;
 
 namespace Xtreem.Crusader.ML.Api.Services.Abstractions
 {
@@ -20,8 +18,6 @@ namespace Xtreem.Crusader.ML.Api.Services.Abstractions
         public bool CanUse() => GetType().Name.StartsWith(Options.Type);
 
         public ITransformer Train<TInput>(IEnumerable<TInput> items) where TInput : class => Train(new MLContext(0), items);
-
-        protected abstract PredictionModel PredictionModel { get; }
 
         protected abstract ITransformer Train<TInput>(MLContext mlContext, IEnumerable<TInput> items) where TInput : class;
     }

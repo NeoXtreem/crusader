@@ -9,7 +9,6 @@ using Microsoft.ML.Data;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Attributes;
 using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.ML.Data.Types;
 using Xtreem.Crusader.Utilities.Attributes;
 
 namespace Xtreem.Crusader.ML.Api.Services
@@ -21,8 +20,6 @@ namespace Xtreem.Crusader.ML.Api.Services
             : base(optionsFactory)
         {
         }
-
-        protected override PredictionModel PredictionModel => PredictionModel.Regression;
 
         protected override ITransformer Train<TInput>(MLContext mlContext, IEnumerable<TInput> items)
         {

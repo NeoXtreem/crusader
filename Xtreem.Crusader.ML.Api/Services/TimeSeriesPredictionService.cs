@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using AutoMapper;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
-using Xtreem.Crusader.Data.Services.Interfaces;
-using Xtreem.Crusader.ML.Api.Profiles;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.Shared.Models;
@@ -18,23 +17,18 @@ namespace Xtreem.Crusader.ML.Api.Services
     internal class TimeSeriesPredictionService : PredictionService
     {
         private readonly TrainModelLoader _trainModelLoader;
-        private readonly IMappingService _mappingService;
+        private readonly IMapper _mapper;
 
-        public TimeSeriesPredictionService(
-            IOptionsFactory<ModelOptions> optionsFactory,
-            TrainModelLoader trainModelLoader,
-            IMappingService mappingService)
+        public TimeSeriesPredictionService(IOptionsFactory<ModelOptions> optionsFactory, TrainModelLoader trainModelLoader, IMapper mapper)
             : base(optionsFactory)
         {
             _trainModelLoader = trainModelLoader;
-            _mappingService = mappingService;
+            _mapper = mapper;
         }
 
         protected override ReadOnlyCollection<Ohlcv> Predict(IEnumerable<OhlcvInput> ohlcvs)
         {
-            return _mappingService.GetMapper<OhlcvProfile>()
-                .Map<IEnumerable<Ohlcv>>(_trainModelLoader.GetModel().CreateTimeSeriesEngine<OhlcvInput, OhlcvTimeSeriesPrediction>(new MLContext(0)).Predict())
-                .AsReadOnly();
+            return _mapper.Map<IEnumerable<Ohlcv>>(_trainModelLoader.GetModel().CreateTimeSeriesEngine<OhlcvInput, OhlcvTimeSeriesPrediction>(new MLContext(0)).Predict()).AsReadOnly();
         }
     }
 }

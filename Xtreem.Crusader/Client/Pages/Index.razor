@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using System.Collections.ObjectModel
 @using System.Diagnostics
 @using Xtreem.Crusader.Shared.Models
@@ -73,7 +73,7 @@
     {
         CurrencyPairChart = new CurrencyPairChart
         {
-            CurrencyPair = new CurrencyPair(),
+            CurrencyPair = new CurrencyPair {BaseCurrency = "BTC", QuoteCurrency = "USD"},
             Resolution = Resolution.Minute
         },
         DateTimeInterval = new DateTimeInterval {From = DateTime.Now, To = DateTime.Now.AddDays(1)}

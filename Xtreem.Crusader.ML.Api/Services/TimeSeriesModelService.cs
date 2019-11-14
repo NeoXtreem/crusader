@@ -5,7 +5,6 @@ using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
 using Xtreem.Crusader.ML.Data.Models;
-using Xtreem.Crusader.ML.Data.Types;
 using Xtreem.Crusader.Utilities.Attributes;
 using Xtreem.Crusader.Utilities.Extensions;
 
@@ -18,8 +17,6 @@ namespace Xtreem.Crusader.ML.Api.Services
             : base(optionsFactory)
         {
         }
-
-        protected override PredictionModel PredictionModel => PredictionModel.TimeSeries;
 
         protected override ITransformer Train<TInput>(MLContext mlContext, IEnumerable<TInput> items)
         {
