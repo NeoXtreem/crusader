@@ -43,12 +43,13 @@ namespace Xtreem.Crusader.ML.Api.Services
             var baseCurrency = currencyPair.BaseCurrency;
             var quoteCurrency = currencyPair.QuoteCurrency;
 
+            using var client = new HttpClient {BaseAddress = new Uri(_options.BaseUrl)};
+
             // Handle the requested period in batches based on the limitation of the provider API.
             for (var batchTo = to; batchTo > from; batchTo = batchTo.Subtract(maxLimit * resolution.Interval))
             {
                 if (cancellationToken.IsCancellationRequested) break;
 
-                using var client = new HttpClient {BaseAddress = new Uri(_options.BaseUrl)};
 
                 // Calculate the limit to pass based on the size of the current batch.
                 var limit = Math.Min(resolution.IntervalsInPeriod(batchTo - from), maxLimit);

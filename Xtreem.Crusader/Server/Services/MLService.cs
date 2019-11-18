@@ -25,7 +25,8 @@ namespace Xtreem.Crusader.Server.Services
 
         public async Task<ReadOnlyCollection<Ohlcv>> PredictAsync(CurrencyPairChartPeriod currencyPairChartPeriod, CancellationToken cancellationToken)
         {
-            var response = await new HttpClient {BaseAddress = new Uri(_options.MLApiBaseUrl)}.PostAsJsonAsync("ml", currencyPairChartPeriod, cancellationToken);
+            using var client = new HttpClient {BaseAddress = new Uri(_options.MLApiBaseUrl)};
+            var response = await client.PostAsJsonAsync("ml", currencyPairChartPeriod, cancellationToken);
 
             if (response.IsSuccessStatusCode)
             {

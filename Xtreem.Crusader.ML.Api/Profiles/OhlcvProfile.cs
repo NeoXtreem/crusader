@@ -16,8 +16,8 @@ namespace Xtreem.Crusader.ML.Api.Profiles
             RecognizePostfixes("Prediction");
 
             CreateMap<Ohlcv, OhlcvInput>();
-            CreateMap<OhlcvRegressionPrediction, Ohlcv>();
-            CreateMap<OhlcvTimeSeriesPrediction, IEnumerable<Ohlcv>>().ConvertUsing<TransposeConverter<OhlcvTimeSeriesPrediction, Ohlcv>>();
+            CreateMap<OhlcvPrediction, Ohlcv>();
+            CreateMap<OhlcvSeriesPrediction, IEnumerable<Ohlcv>>().ConvertUsing<TransposeConverter<OhlcvSeriesPrediction, Ohlcv>>();
         }
 
         [UsedImplicitly]
@@ -28,7 +28,7 @@ namespace Xtreem.Crusader.ML.Api.Profiles
                 // Zip all the member collections from the source object together into a single collection then map to the destination based on the property names.
                 return typeof(TSource).GetProperties()
                     .Select(p => ((IEnumerable)p.GetValue(source)).Cast<object>().Select(item => (item, p.Name)))
-                    .Zip(s => context.Mapper.Map<TDestination>(s.ToDictionary(k => k.Name, e => e.item)));
+                    .Zip(s => context.Mapper.Map<TDestination>(context.Mapper.Map<OhlcvBoundPrediction>(s.ToDictionary(k => k.Name, e => e.item))));
             }
         }
     }

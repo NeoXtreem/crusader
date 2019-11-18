@@ -38,7 +38,7 @@ namespace Xtreem.Crusader.ML.Api
                 .AddAutoMapper(typeof(OhlcvProfile))
                 /*.AddPredictionEnginePoolConfigOnly()*/; //TODO: Uncomment once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
 
-            AddPredictionEnginePool<OhlcvRegressionPrediction>();
+            AddPredictionEnginePool<OhlcvPrediction>();
 
             void AddPredictionEnginePool<TPrediction>() where TPrediction : class, new()
             {

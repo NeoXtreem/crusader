@@ -14,11 +14,11 @@ using Xtreem.Crusader.Utilities.Extensions;
 namespace Xtreem.Crusader.ML.Api.Services
 {
     [Inject, UsedImplicitly]
-    internal class RegressionPredictionService : PredictionEnginePoolService<OhlcvRegressionPrediction>
+    internal class RegressionPredictionService : PredictionEnginePoolService<OhlcvPrediction>
     {
         private readonly IMapper _mapper;
 
-        public RegressionPredictionService(IOptionsFactory<ModelOptions> optionsFactory, LazyService<PredictionEnginePool<OhlcvInput, OhlcvRegressionPrediction>> lazyPredictionEnginePool, IMapper mapper)
+        public RegressionPredictionService(IOptionsFactory<ModelOptions> optionsFactory, LazyService<PredictionEnginePool<OhlcvInput, OhlcvPrediction>> lazyPredictionEnginePool, IMapper mapper)
             : base(optionsFactory, lazyPredictionEnginePool)
         {
             _mapper = mapper;

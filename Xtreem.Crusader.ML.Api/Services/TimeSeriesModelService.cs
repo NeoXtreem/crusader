@@ -24,17 +24,17 @@ namespace Xtreem.Crusader.ML.Api.Services
             var trainData = mlContext.Data.LoadFromEnumerable(data);
 
             var estimator = mlContext.Forecasting.ForecastBySsa(
-                nameof(OhlcvTimeSeriesPrediction.ClosePrediction),
+                nameof(OhlcvSeriesPrediction.ClosePrediction),
                 nameof(OhlcvInput.Close),
                 12,
                 data.Length,
                 data.Length,
                 2,
-                confidenceLowerBoundColumn: nameof(OhlcvTimeSeriesPrediction.ConfidenceLowerBound),
-                confidenceUpperBoundColumn: nameof(OhlcvTimeSeriesPrediction.ConfidenceUpperBound));
+                confidenceLowerBoundColumn: nameof(OhlcvSeriesPrediction.ConfidenceLowerBound),
+                confidenceUpperBoundColumn: nameof(OhlcvSeriesPrediction.ConfidenceUpperBound));
 
             var transformer = estimator.Fit(trainData);
-            using var engine = transformer.CreateTimeSeriesEngine<OhlcvInput, OhlcvTimeSeriesPrediction>(mlContext);
+            using var engine = transformer.CreateTimeSeriesEngine<OhlcvInput, OhlcvSeriesPrediction>(mlContext);
             engine.CheckPoint(mlContext, Options.FilePath);
 
             return transformer;
