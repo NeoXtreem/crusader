@@ -43,15 +43,11 @@ namespace Xtreem.Crusader.ML.Api
             void AddPredictionEnginePool<TPrediction>() where TPrediction : class, new()
             {
                 services.AddPredictionEnginePool<OhlcvInput, TPrediction>(); //TODO: Remove once this PR is done: https://github.com/dotnet/machinelearning/pull/4393
+                services.AddSingleton(sp => new LazyService<PredictionEnginePool<OhlcvInput, TPrediction>>(sp));
 
-                services.AddSingleton(sp =>
+                services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, TPrediction>>().Configure(options =>
                 {
-                    services.AddOptions<PredictionEnginePoolOptions<OhlcvInput, TPrediction>>().Configure(options =>
-                    {
-                        options.ModelLoader = sp.GetService<TrainModelLoader>();
-                    });
-
-                    return new LazyService<PredictionEnginePool<OhlcvInput, TPrediction>>(sp);
+                    options.ModelLoader = services.BuildServiceProvider().GetService<TrainModelLoader>();
                 });
             }
         }

@@ -28,7 +28,7 @@ namespace Xtreem.Crusader.ML.Api.Services
 
         protected override ReadOnlyCollection<Ohlcv> Predict(IEnumerable<OhlcvInput> ohlcvs)
         {
-            return _mapper.Map<IEnumerable<Ohlcv>>(_trainModelLoader.GetModel().CreateTimeSeriesEngine<OhlcvInput, OhlcvSeriesPrediction>(new MLContext(0)).Predict()).AsReadOnly();
+            return _mapper.Map<IEnumerable<Ohlcv>>(_trainModelLoader.GetModel().CreateTimeSeriesEngine<OhlcvInput, OhlcvPredictionSeries>(new MLContext(0)).Predict()).AsReadOnly();
         }
     }
 }

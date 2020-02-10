@@ -2,7 +2,7 @@
 
 namespace Xtreem.Crusader.ML.Data.Models
 {
-    public class OhlcvBoundPrediction : OhlcvPrediction
+    public class OhlcvPredictionConfidence : OhlcvPrediction
     {
         [UsedImplicitly]
         public float ConfidenceLowerBound { get; set; }

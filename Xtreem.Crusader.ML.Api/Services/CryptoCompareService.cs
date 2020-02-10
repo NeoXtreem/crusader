@@ -50,7 +50,6 @@ namespace Xtreem.Crusader.ML.Api.Services
             {
                 if (cancellationToken.IsCancellationRequested) break;
 
-
                 // Calculate the limit to pass based on the size of the current batch.
                 var limit = Math.Min(resolution.IntervalsInPeriod(batchTo - from), maxLimit);
                 if (limit < 1) continue;
@@ -63,7 +62,7 @@ namespace Xtreem.Crusader.ML.Api.Services
                         ("toTs", ((DateTimeOffset)batchTo).ToUniversalTime().ToUnixTimeSeconds().ToString()),
                         ("api_key", _options.ApiKey),
                         ("limit", limit.ToString())
-                    }.ToDictionary(p => p.key, p => p.value.ToString())), cancellationToken);
+                    }.ToDictionary(p => p.key, p => p.value)), cancellationToken);
 
                 if (response.IsSuccessStatusCode)
                 {

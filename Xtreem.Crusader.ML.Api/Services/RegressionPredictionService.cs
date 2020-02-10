@@ -16,16 +16,19 @@ namespace Xtreem.Crusader.ML.Api.Services
     [Inject, UsedImplicitly]
     internal class RegressionPredictionService : PredictionEnginePoolService<OhlcvPrediction>
     {
+        private readonly TrainModelLoader _trainModelLoader;
         private readonly IMapper _mapper;
 
-        public RegressionPredictionService(IOptionsFactory<ModelOptions> optionsFactory, LazyService<PredictionEnginePool<OhlcvInput, OhlcvPrediction>> lazyPredictionEnginePool, IMapper mapper)
+        public RegressionPredictionService(IOptionsFactory<ModelOptions> optionsFactory, TrainModelLoader trainModelLoader, LazyService<PredictionEnginePool<OhlcvInput, OhlcvPrediction>> lazyPredictionEnginePool, IMapper mapper)
             : base(optionsFactory, lazyPredictionEnginePool)
         {
+            _trainModelLoader = trainModelLoader;
             _mapper = mapper;
         }
 
         protected override ReadOnlyCollection<Ohlcv> Predict(IEnumerable<OhlcvInput> ohlcvs)
         {
+            _trainModelLoader.GetModel();
             return _mapper.Map<IEnumerable<Ohlcv>>(ohlcvs.Select(o => LazyPredictionEnginePool.Value.Predict(o))).AsReadOnly();
         }
     }

@@ -5,22 +5,22 @@ namespace Xtreem.Crusader.ML.Data.Models
 {
     public class OhlcvInput : CurrencyPairChartTime
     {
-        [LabelColumn(nameof(OhlcvPrediction.OpenPrediction)), UsedImplicitly]
+        [PredictColumn, UsedImplicitly]
         public float Open { get; set; }
 
-        [LabelColumn(nameof(OhlcvPrediction.ClosePrediction)), UsedImplicitly]
+        [PredictColumn, UsedImplicitly]
         public float Close { get; set; }
 
-        [LabelColumn(nameof(OhlcvPrediction.HighPrediction)), UsedImplicitly]
+        [PredictColumn, UsedImplicitly]
         public float High { get; set; }
 
-        [LabelColumn(nameof(OhlcvPrediction.LowPrediction)), UsedImplicitly]
+        [PredictColumn, UsedImplicitly]
         public float Low { get; set; }
 
-        [LabelColumn(nameof(OhlcvPrediction.VolumeFromPrediction)), UsedImplicitly]
+        [PredictColumn, UsedImplicitly]
         public float VolumeFrom { get; set; }
 
-        [LabelColumn(nameof(OhlcvPrediction.VolumeToPrediction)), UsedImplicitly]
+        [PredictColumn, UsedImplicitly]
         public float VolumeTo { get; set; }
     }
 }

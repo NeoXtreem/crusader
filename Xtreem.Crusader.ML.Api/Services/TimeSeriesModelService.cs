@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
 using Xtreem.Crusader.ML.Api.Services.Abstractions;
+using Xtreem.Crusader.ML.Data.Attributes;
 using Xtreem.Crusader.ML.Data.Models;
 using Xtreem.Crusader.Utilities.Attributes;
 using Xtreem.Crusader.Utilities.Extensions;
@@ -11,30 +13,32 @@ using Xtreem.Crusader.Utilities.Extensions;
 namespace Xtreem.Crusader.ML.Api.Services
 {
     [Inject, UsedImplicitly]
-    internal class TimeSeriesModelService : ModelService
+    internal class TimeSeriesModelService : ImputationModelService
     {
         public TimeSeriesModelService(IOptionsFactory<ModelOptions> optionsFactory)
             : base(optionsFactory)
         {
         }
 
-        protected override ITransformer Train<TInput>(MLContext mlContext, IEnumerable<TInput> items)
+        protected override IEstimator<ITransformer> AddColumnToPipeline<TInput>(IEstimator<ITransformer> pipeline, MLContext mlContext, PropertyInfo property, PredictColumnAttribute attribute, IEnumerable<TInput> items)
         {
-            var data = items.ToArrayOrCast();
-            var trainData = mlContext.Data.LoadFromEnumerable(data);
+            var dataLength = items.ToArrayOrCast().Length;
 
-            var estimator = mlContext.Forecasting.ForecastBySsa(
-                nameof(OhlcvSeriesPrediction.ClosePrediction),
-                nameof(OhlcvInput.Close),
+            return pipeline.Append(mlContext.Forecasting.ForecastBySsa(
+                attribute.PredictionColumnName,
+                property.Name,
                 12,
-                data.Length,
-                data.Length,
+                dataLength,
+                dataLength,
                 2,
-                confidenceLowerBoundColumn: nameof(OhlcvSeriesPrediction.ConfidenceLowerBound),
-                confidenceUpperBoundColumn: nameof(OhlcvSeriesPrediction.ConfidenceUpperBound));
+                confidenceLowerBoundColumn: property.Name + "ConfidenceLowerBound",
+                confidenceUpperBoundColumn: property.Name + "ConfidenceUpperBound"));
+        }
 
-            var transformer = estimator.Fit(trainData);
-            using var engine = transformer.CreateTimeSeriesEngine<OhlcvInput, OhlcvSeriesPrediction>(mlContext);
+        protected override ITransformer Evaluate<TInput>(MLContext mlContext, IEstimator<ITransformer> pipeline, IEnumerable<TInput> items)
+        {
+            var transformer = pipeline.Fit(mlContext.Data.LoadFromEnumerable(items));
+            using var engine = transformer.CreateTimeSeriesEngine<OhlcvInput, OhlcvPredictionSeries>(mlContext);
             engine.CheckPoint(mlContext, Options.FilePath);
 
             return transformer;
